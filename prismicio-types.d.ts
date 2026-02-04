@@ -195,7 +195,7 @@ export type ContactDocument<Lang extends string = string> =
     Lang
   >;
 
-type HomeDocumentDataSlicesSlice = never;
+type HomeDocumentDataSlicesSlice = HeroSlice;
 
 /**
  * Content for Home documents
@@ -513,6 +513,88 @@ export type AllDocumentTypes =
   | PlaygroundDocument
   | WorksDocument;
 
+/**
+ * Primary content in *Hero → Default → Primary*
+ */
+export interface HeroSliceDefaultPrimary {
+  /**
+   * Heading 1 field in *Hero → Default → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: Heading 1
+   * - **API ID Path**: hero.default.primary.heading_1
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  heading_1: prismic.KeyTextField;
+
+  /**
+   * Paragraph 1 field in *Hero → Default → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: Paragraph 1
+   * - **API ID Path**: hero.default.primary.paragraph_1
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  paragraph_1: prismic.RichTextField;
+
+  /**
+   * Heading 2 field in *Hero → Default → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: Heading 2
+   * - **API ID Path**: hero.default.primary.heading_2
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  heading_2: prismic.KeyTextField;
+
+  /**
+   * Paragraph 2 field in *Hero → Default → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: Paragraph 2
+   * - **API ID Path**: hero.default.primary.paragraph_2
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  paragraph_2: prismic.RichTextField;
+
+  /**
+   * Video field in *Hero → Default → Primary*
+   *
+   * - **Field Type**: Link
+   * - **Placeholder**: *None*
+   * - **API ID Path**: hero.default.primary.video
+   * - **Documentation**: https://prismic.io/docs/fields/link
+   */
+  video: prismic.LinkField<string, string, unknown, prismic.FieldState, never>;
+}
+
+/**
+ * Default variation for Hero Slice
+ *
+ * - **API ID**: `default`
+ * - **Description**: Default
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type HeroSliceDefault = prismic.SharedSliceVariation<
+  "default",
+  Simplify<HeroSliceDefaultPrimary>,
+  never
+>;
+
+/**
+ * Slice variation for *Hero*
+ */
+type HeroSliceVariation = HeroSliceDefault;
+
+/**
+ * Hero Shared Slice
+ *
+ * - **API ID**: `hero`
+ * - **Description**: Hero
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type HeroSlice = prismic.SharedSlice<"hero", HeroSliceVariation>;
+
 declare module "@prismicio/client" {
   interface CreateClient {
     (
@@ -553,6 +635,10 @@ declare module "@prismicio/client" {
       WorksDocumentData,
       WorksDocumentDataSlicesSlice,
       AllDocumentTypes,
+      HeroSlice,
+      HeroSliceDefaultPrimary,
+      HeroSliceVariation,
+      HeroSliceDefault,
     };
   }
 }

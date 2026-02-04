@@ -1,0 +1,54 @@
+[
+	{
+		"__TYPE__": "SharedSliceContent",
+		"variation": "default",
+		"primary": {
+			"video": {
+				"key": "09a6e004-6a56-40bd-beb8-f6daaff49b91",
+				"__TYPE__": "LinkContent",
+				"value": {
+					"__TYPE__": "ExternalLink",
+					"url": "https://slicemachine.dev",
+					"text": "clock"
+				}
+			},
+			"heading_1": {
+				"__TYPE__": "FieldContent",
+				"type": "Text",
+				"value": "CREATIVE"
+			},
+			"heading_2": {
+				"__TYPE__": "FieldContent",
+				"type": "Text",
+				"value": "DESIGNER"
+			},
+			"paragraph_1": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Website design, digital product design,interactive design, prototying, art direction, print design, branding.",
+							"spans": []
+						},
+						"direction": "ltr"
+					}
+				]
+			},
+			"paragraph_2": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Sang is a designer with three years of experience in creating standout digital experiences. He combines design skills with technical know-how to produce impactful work. Based in Ho Chi Minh City, Vietnam, he is passionate about web and product design.",
+							"spans": []
+						},
+						"direction": "ltr"
+					}
+				]
+			}
+		},
+		"items": []
+	}
+]
