@@ -1,5 +1,7 @@
 import "./globals.css";
+import { createClient } from "@/prismicio";
 import SmoothScroll from "./components/global/SmoothScroll";
+import Navbar from "./components/global/Navbar";
 
 export const metadata = {
   title: "Made by Sang",
@@ -9,11 +11,17 @@ export const metadata = {
   },
 };
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+  const client = createClient();
+  const navbar = await client.getSingle("navbar");
+
   return (
     <html lang="en">
       <body>
-        <SmoothScroll>{children}</SmoothScroll>
+        <SmoothScroll>
+          <Navbar data={navbar.data} />
+          {children}
+        </SmoothScroll>
       </body>
     </html>
   );

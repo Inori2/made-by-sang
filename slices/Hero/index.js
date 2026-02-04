@@ -3,16 +3,19 @@
  * @typedef {import("@prismicio/react").SliceComponentProps<HeroSlice>} HeroProps
  * @type {import("react").FC<HeroProps>}
  */
-
+"use client";
 import { PrismicRichText } from "@prismicio/react";
-
+import Btn from "@/app/components/uis/Btn";
+import { useRef } from "react";
 const Hero = ({ slice }) => {
+  const btnRef = useRef(null);
   return (
     <section
       data-slice-type={slice.slice_type}
       data-slice-variation={slice.variation}
+      className="w-screen h-dvh flex justify-center items-center"
     >
-      <div className="top-content">
+      {/* <div className="top-content">
         <h1 className="title">{slice.primary.heading_1}</h1>
         <div className="description">
           <span>[D]</span>
@@ -31,7 +34,12 @@ const Hero = ({ slice }) => {
           </span>
         </div>
         <h1 className="title">{slice.primary.heading_2}</h1>
-      </div>
+      </div> */}
+      <Btn
+        className="relative px-4 py-2 border border-(--secondary-900) bg-(--primary-950) uppercase cursor-pointer"
+        label="menu"
+        ref={btnRef}
+      />
     </section>
   );
 };

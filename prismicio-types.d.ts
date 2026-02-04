@@ -272,6 +272,16 @@ export type HomeDocument<Lang extends string = string> =
  */
 export interface NavbarDocumentDataNavlinkItem {
   /**
+   * Nav Item Label field in *Navbar → Navlink*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: navbar.navlink[].nav_item_label
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  nav_item_label: prismic.KeyTextField;
+
+  /**
    * Nav Items field in *Navbar → Navlink*
    *
    * - **Field Type**: Link
@@ -312,6 +322,17 @@ export interface NavbarDocumentDataNavlinkItem {
     prismic.FieldState,
     never
   >;
+
+  /**
+   * Is Button field in *Navbar → Navlink*
+   *
+   * - **Field Type**: Boolean
+   * - **Placeholder**: *None*
+   * - **Default Value**: false
+   * - **API ID Path**: navbar.navlink[].is_button
+   * - **Documentation**: https://prismic.io/docs/fields/boolean
+   */
+  is_button: prismic.BooleanField;
 }
 
 /**
@@ -341,6 +362,23 @@ interface NavbarDocumentData {
   logo_image: prismic.ImageField<never>;
 
   /**
+   * Logo Link field in *Navbar*
+   *
+   * - **Field Type**: Link
+   * - **Placeholder**: *None*
+   * - **API ID Path**: navbar.logo_link
+   * - **Tab**: Main
+   * - **Documentation**: https://prismic.io/docs/fields/link
+   */
+  logo_link: prismic.LinkField<
+    string,
+    string,
+    unknown,
+    prismic.FieldState,
+    never
+  >;
+
+  /**
    * Menu Button field in *Navbar*
    *
    * - **Field Type**: Text
@@ -361,6 +399,18 @@ interface NavbarDocumentData {
    * - **Documentation**: https://prismic.io/docs/fields/repeatable-group
    */
   navlink: prismic.GroupField<Simplify<NavbarDocumentDataNavlinkItem>>;
+
+  /**
+   * Is Menu Open field in *Navbar*
+   *
+   * - **Field Type**: Boolean
+   * - **Placeholder**: *None*
+   * - **Default Value**: false
+   * - **API ID Path**: navbar.is_menu_open
+   * - **Tab**: Main
+   * - **Documentation**: https://prismic.io/docs/fields/boolean
+   */
+  is_menu_open: prismic.BooleanField;
 }
 
 /**

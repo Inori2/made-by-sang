@@ -21,6 +21,17 @@
           "thumbnails": []
         }
       },
+      "logo_link": {
+        "type": "Link",
+        "config": {
+          "label": "Logo Link",
+          "placeholder": "",
+          "select": null,
+          "allowTargetBlank": true,
+          "allowText": true,
+          "repeat": false
+        }
+      },
       "menu_button": {
         "type": "Text",
         "config": {
@@ -34,6 +45,13 @@
           "label": "Navlink",
           "repeat": true,
           "fields": {
+            "nav_item_label": {
+              "type": "Text",
+              "config": {
+                "label": "Nav Item Label",
+                "placeholder": ""
+              }
+            },
             "nav_items": {
               "type": "Link",
               "config": {
@@ -62,8 +80,26 @@
                 "allowText": true,
                 "repeat": false
               }
+            },
+            "is_button": {
+              "type": "Boolean",
+              "config": {
+                "label": "Is Button",
+                "placeholder_false": "false",
+                "placeholder_true": "true",
+                "default_value": false
+              }
             }
           }
+        }
+      },
+      "is_menu_open": {
+        "type": "Boolean",
+        "config": {
+          "label": "Is Menu Open",
+          "placeholder_false": "false",
+          "placeholder_true": "true",
+          "default_value": false
         }
       }
     }
