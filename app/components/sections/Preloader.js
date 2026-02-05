@@ -13,8 +13,8 @@ export default function Preloader() {
       <GridPattern amount={4} position="absolute" />
       <div className="relative z-10 h-1/3 w-full">
         <div className="flex flex-row justify-between">
+          <span className="text-neutral-300">SITEMAP:</span>
           <ul className="flex flex-col gap-1 text-neutral-500">
-            <span className="text-neutral-300">SITEMAP:</span>
             {["INDEX", "ABOUT", "WORK", "PLAYGROUND", "CONTACT"].map(
               (item, index) => (
                 <li key={index} className="flex items-center gap-2">

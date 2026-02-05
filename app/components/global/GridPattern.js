@@ -5,7 +5,7 @@ export default function GridPattern({
 }) {
   return (
     <div
-      className={`${position} inset-0 flex items-center justify-center w-full h-full px-5 ${className}`}
+      className={`${position} inset-0 flex items-center justify-center w-full h-full px-5 ${className ?? ""}`}
     >
       {Array.from({ length: amount }).map((_, i) => (
         <div
