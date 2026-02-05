@@ -35,11 +35,6 @@ const Hero = ({ slice }) => {
         </div>
         <h1 className="title">{slice.primary.heading_2}</h1>
       </div> */}
-      <Btn
-        className="relative px-4 py-2 border border-(--secondary-900) bg-(--primary-950) uppercase cursor-pointer"
-        label="menu"
-        ref={btnRef}
-      />
     </section>
   );
 };

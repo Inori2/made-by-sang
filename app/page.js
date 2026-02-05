@@ -1,15 +1,14 @@
 import { notFound } from "next/navigation";
 import { asImageSrc } from "@prismicio/client";
-import { SliceZone } from "@prismicio/react";
 
 import { createClient } from "@/prismicio";
-import { components } from "@/slices";
+import HomeClients from "./components/sections/HomeClients";
 
 export default async function Page() {
   const client = createClient();
   const page = await client.getSingle("home").catch(() => notFound());
 
-  return <SliceZone slices={page.data.slices} components={components} />;
+  return <HomeClients slices={page.data.slices} />;
 }
 
 export async function generateMetadata() {
