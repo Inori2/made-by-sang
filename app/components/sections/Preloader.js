@@ -13,19 +13,19 @@ export default function Preloader() {
     <div className={styles.preloader}>
       <GridPattern amount={4} position="absolute" />
       <div className={styles.topContainer}>
-          <div className="flex flex-col gap-2">
-            <span className="text-neutral-300">SITEMAP:</span>
-            <ul className="flex flex-col gap-1 text-neutral-500">
+          <div className={styles.listContainer}>
+            <span>SITEMAP:</span>
+            <ul>
               {["INDEX", "ABOUT", "WORK", "PLAYGROUND", "CONTACT"].map(
                 (item, index) => (
-                  <li key={index} className="flex items-center gap-2">
+                  <li key={index}>
                     <span>{`>`}</span>
                     <span>{item}</span>
                   </li>
                 ),
               )}
             </ul></div>
-          <div className="hidden sm:block">
+          <div className={`hidden sm:block ${styles.rulerIndicator}`}>
             <svg
               width="409"
               height="12"
@@ -51,7 +51,7 @@ export default function Preloader() {
               })}
             </svg>
           </div>
-          <div>
+          <div className={styles.pattern}>
             <svg
               width="108"
               height="60"
@@ -174,7 +174,7 @@ export default function Preloader() {
             </svg>
           </div>
       </div>
-      <div className="relative z-10 h-1/3 w-full flex justify-between items-center text-neutral-500">
+      <div className={styles.middleContainer}>
         <div className="flex flex-col gap-1">
           <span>{`X: ${x}.0px`}</span>
           <span>{`Y: ${y}.0px`}</span>
@@ -184,7 +184,7 @@ export default function Preloader() {
           <span>FOLIO '26</span>
         </div>
       </div>
-      <div className="relative z-10 h-1/3 w-full flex flex-row justify-between items-end text-neutral-500">
+      <div className={styles.bottomContainer}>
         <div className="flex flex-row gap-1 items-center">
           <div className="h-1.5 w-1.5 bg-neutral-50"></div>
           <div className="flex flex-row gap-1 items-end">
