@@ -1,17 +1,23 @@
-@reference "tailwindcss";
-
 /*Preloader*/
-.top-container {
+.preloader {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem; /* gap-5 = 20px */
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--primary-950); /* bg-neutral-950 */
+    padding: 1.25rem; /* p-5 = 20px */ 
+    font-size: clamp(0.75rem, 1vw, 0.875rem);
+}
+
+.topContainer {
     z-index: 10;
     height: 33.333333%;
     width: 100%;
-    justify-content: space-between;
     display: flex;
     flex-direction: row;
-}
-
-@layer base {
-    .preloader {
-        @apply fixed inset-0 z-50 flex flex-col gap-5 items-center justify-between bg-neutral-950 w-screen h-screen p-5 text-[12px];
-    }
+    justify-content: space-between;
 }

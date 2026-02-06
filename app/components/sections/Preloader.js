@@ -12,8 +12,7 @@ export default function Preloader() {
   return (
     <div className={styles.preloader}>
       <GridPattern amount={4} position="absolute" />
-      <div className="relative z-10 h-1/3 w-full">
-        <div className="flex flex-row justify-between">
+      <div className={styles.topContainer}>
           <div className="flex flex-col gap-2">
             <span className="text-neutral-300">SITEMAP:</span>
             <ul className="flex flex-col gap-1 text-neutral-500">
@@ -174,7 +173,6 @@ export default function Preloader() {
               />
             </svg>
           </div>
-        </div>
       </div>
       <div className="relative z-10 h-1/3 w-full flex justify-between items-center text-neutral-500">
         <div className="flex flex-col gap-1">
