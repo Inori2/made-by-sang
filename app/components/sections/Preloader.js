@@ -175,7 +175,7 @@ export default function Preloader() {
           </div>
       </div>
       <div className={styles.middleContainer}>
-        <div className="flex flex-col gap-1">
+        <div className={styles.mouseIndicator}>
           <span>{`X: ${x}.0px`}</span>
           <span>{`Y: ${y}.0px`}</span>
         </div>
@@ -185,27 +185,26 @@ export default function Preloader() {
         </div>
       </div>
       <div className={styles.bottomContainer}>
-        <div className="flex flex-row gap-1 items-center">
-          <div className="h-1.5 w-1.5 bg-neutral-50"></div>
-          <div className="flex flex-row gap-1 items-end">
+        <div className={styles.indicator}>
+          <div className={styles.square}></div>
+          <div>
             <span>INITIALISING</span>
             <span>...</span>
           </div>
         </div>
-        <div className="w-21.5 flex flex-col gap-2">
-          <div className="relative w-full h-21.5 border-[0.3px] border-neutral-500 flex justify-center items-center">
-            <div className="absolute inset-0 w-full h-full flex flex-wrap">
+        <div className={styles.radarContainer}>
+          <div className={styles.radar}>
+            <div className={styles.radarGrid}>
               {Array.from({ length: 4 }).map((_, i) => (
                 <div
                   key={i}
-                  className="w-1/2 h-1/2 border-[0.3px] border-neutral-500"
                 ></div>
               ))}
             </div>
-            <div className="relative h-2 w-2 bg-neutral-50"></div>
+            <div className={styles.square}></div>
           </div>
-          <div className="w-full h-2.5 border border-neutral-50 p-0.5">
-            <div className="w-full h-full bg-neutral-50"></div>
+          <div className={styles.progressContainer}>
+            <div className={styles.progressBar}></div>
           </div>
         </div>
       </div>
