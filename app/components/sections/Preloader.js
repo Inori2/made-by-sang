@@ -1,20 +1,70 @@
 import styles from "./styles.module.css"
 import GridPattern from "../global/GridPattern";
+import Radar from "../uis/Radar";
+import { useRef } from "react";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { SplitText } from "gsap/SplitText";
+import useMousePosition from "../../hooks/useMousePosition";
+
+gsap.registerPlugin(SplitText, useGSAP);
 
 export default function Preloader() {
+  const container = useRef(null);
+  const countNumber = useRef();
+  const xRef = useRef();
+  const yRef = useRef();
   const lines = 69;
   const gap = 6;
-  let x = 0;
-  let y = 0;
-  let progress = 0;
+  let progress = { value: 0 };
 
-  // TODO: Adjust font size to be responsive
+  const { positionRef } = useMousePosition({
+    threshold: 2,
+    clampToBounds: false,
+    raf: true,
+  });
+
+  useGSAP(() => {
+    // Middle Container
+    // Count to 100
+    gsap.to(progress, {
+      delay: 1,
+      duration: 3,
+      value: 100,
+      ease: "power3.out",
+      onUpdate: () => {
+        countNumber.current.textContent = `${Math.round(progress.value)}.0`
+      }
+    })
+
+    // Mouse Position Tracking for X, Y indicators
+    const updateMousePosition = () => {
+      if (!container.current) return;
+
+      const { x, y } = positionRef.current;
+      const containerBounds = container.current.getBoundingClientRect();
+
+      // Calculate container-relative position
+      const containerX = x - containerBounds.left;
+      const containerY = y - containerBounds.top;
+      const textX = Math.max(0, Math.min(containerX, containerBounds.width));
+      const textY = Math.max(0, Math.min(containerY, containerBounds.height));
+
+      // Update indicator text
+      if (xRef.current) xRef.current.textContent = `X: ${textX.toFixed(0)}.0px`;
+      if (yRef.current) yRef.current.textContent = `Y: ${textY.toFixed(0)}.0px`;
+    };
+
+    gsap.ticker.add(updateMousePosition);
+    return () => gsap.ticker.remove(updateMousePosition);
+  }, { scope: container });
+
   return (
-    <div className={styles.preloader}>
+    <div className={styles.preloader} ref={container}>
       <GridPattern amount={4} position="absolute" />
       <div className={styles.topContainer}>
-          <div className={styles.listContainer}>
-            <span>SITEMAP:</span>
+          <div className={`list-container ${styles.listContainer}`}>
+            <span className="list-heading">SITEMAP:</span>
             <ul>
               {["INDEX", "ABOUT", "WORK", "PLAYGROUND", "CONTACT"].map(
                 (item, index) => (
@@ -174,12 +224,12 @@ export default function Preloader() {
             </svg>
           </div>
       </div>
-      <div className={styles.middleContainer}>
+      <div className={`middle-container ${styles.middleContainer}`}>
         <div className={styles.mouseIndicator}>
-          <span>{`X: ${x}.0px`}</span>
-          <span>{`Y: ${y}.0px`}</span>
+          <span ref={xRef}>{`X: 0.0px`}</span>
+          <span ref={yRef}>{`Y: 0.0px`}</span>
         </div>
-        <div>{progress.toFixed(0)}.0</div>
+        <div ref={countNumber}>0.0</div>
         <div>
           <span>FOLIO '26</span>
         </div>
@@ -193,16 +243,7 @@ export default function Preloader() {
           </div>
         </div>
         <div className={styles.radarContainer}>
-          <div className={styles.radar}>
-            <div className={styles.radarGrid}>
-              {Array.from({ length: 4 }).map((_, i) => (
-                <div
-                  key={i}
-                ></div>
-              ))}
-            </div>
-            <div className={styles.square}></div>
-          </div>
+          <Radar containerRef={container} />
           <div className={styles.progressContainer}>
             <div className={styles.progressBar}></div>
           </div>
