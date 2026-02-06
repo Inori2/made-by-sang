@@ -1,3 +1,4 @@
+import styles from "./styles.module.css"
 import GridPattern from "../global/GridPattern";
 
 export default function Preloader() {
@@ -9,21 +10,22 @@ export default function Preloader() {
 
   // TODO: Adjust font size to be responsive
   return (
-    <div className="fixed inset-0 z-50 flex flex-col gap-5 items-center justify-between bg-neutral-950 w-screen h-screen p-5 text-[12px]">
+    <div className={styles.preloader}>
       <GridPattern amount={4} position="absolute" />
       <div className="relative z-10 h-1/3 w-full">
         <div className="flex flex-row justify-between">
-          <span className="text-neutral-300">SITEMAP:</span>
-          <ul className="flex flex-col gap-1 text-neutral-500">
-            {["INDEX", "ABOUT", "WORK", "PLAYGROUND", "CONTACT"].map(
-              (item, index) => (
-                <li key={index} className="flex items-center gap-2">
-                  <span>{`>`}</span>
-                  <span>{item}</span>
-                </li>
-              ),
-            )}
-          </ul>
+          <div className="flex flex-col gap-2">
+            <span className="text-neutral-300">SITEMAP:</span>
+            <ul className="flex flex-col gap-1 text-neutral-500">
+              {["INDEX", "ABOUT", "WORK", "PLAYGROUND", "CONTACT"].map(
+                (item, index) => (
+                  <li key={index} className="flex items-center gap-2">
+                    <span>{`>`}</span>
+                    <span>{item}</span>
+                  </li>
+                ),
+              )}
+            </ul></div>
           <div className="hidden sm:block">
             <svg
               width="409"

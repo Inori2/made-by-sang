@@ -1,14 +1,50 @@
 {
   "format": "page",
   "id": "playground",
+  "label": "Playground",
+  "repeatable": false,
+  "status": true,
   "json": {
     "Main": {
+      "page_name": {
+        "type": "Text",
+        "config": {
+          "label": "Page Name",
+          "placeholder": ""
+        }
+      },
+      "page_descriptions": {
+        "type": "StructuredText",
+        "config": {
+          "label": "Page descriptions",
+          "placeholder": "",
+          "allowTargetBlank": true,
+          "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+        }
+      },
+      "gallery": {
+        "type": "Group",
+        "config": {
+          "label": "Gallery",
+          "repeat": true,
+          "fields": {
+            "gallery_image": {
+              "type": "Image",
+              "config": {
+                "label": "Gallery Image",
+                "constraint": {},
+                "thumbnails": []
+              }
+            }
+          }
+        }
+      },
       "slices": {
+        "type": "Slices",
+        "fieldset": "Slice Zone",
         "config": {
           "choices": {}
-        },
-        "fieldset": "Slice Zone",
-        "type": "Slices"
+        }
       }
     },
     "SEO & Metadata": {
@@ -38,8 +74,5 @@
         "type": "Image"
       }
     }
-  },
-  "label": "Playground",
-  "repeatable": false,
-  "status": true
+  }
 }
