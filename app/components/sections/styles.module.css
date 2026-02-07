@@ -49,10 +49,6 @@
     justify-self: center;
 }
 
-.pattern {
-    justify-self: end;
-}
-
 /*Middle Container*/
 .middleContainer {
     z-index: 10;
