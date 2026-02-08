@@ -13,6 +13,7 @@ gsap.registerPlugin(SplitText, useGSAP);
 export default function Preloader() {
   const container = useRef(null);
   const countNumber = useRef();
+  const progressBar = useRef();
   const xRef = useRef();
   const yRef = useRef();
   const lines = 69;
@@ -35,6 +36,7 @@ export default function Preloader() {
       ease: "power3.out",
       onUpdate: () => {
         countNumber.current.textContent = `${Math.round(progress.value)}.0`
+        progressBar.current.style.width = `${progress.value}%`
       }
     })
 
@@ -125,7 +127,7 @@ export default function Preloader() {
         <div className={styles.radarContainer}>
           <Radar containerRef={container} />
           <div className={styles.progressContainer}>
-            <div className={styles.progressBar}></div>
+            <div className={styles.progressBar} ref={progressBar}></div>
           </div>
         </div>
       </div>
