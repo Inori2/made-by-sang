@@ -12,6 +12,11 @@ gsap.registerPlugin(SplitText, useGSAP);
 
 export default function Preloader() {
   const container = useRef(null);
+  const rulerRef = useRef(null);
+  const indicatorRef = useRef(null);
+  const indicatorSquareRef = useRef(null);
+  const indicatorTextRef = useRef(null);
+  const indicatorEllipsisRef = useRef(null);
   const countNumber = useRef();
   const progressBar = useRef();
   const xRef = useRef();
@@ -27,7 +32,37 @@ export default function Preloader() {
   });
 
   useGSAP(() => {
-    // Middle Container
+    //Indicator Animation
+    const IndicatorAnimation = () => {
+      if (!indicatorRef.current) return;
+      const indicator = indicatorRef.current;
+      const indicatorText = indicatorTextRef.current;
+      const indicatorDots = indicatorEllipsisRef.current;
+      const square = indicatorSquareRef.current;
+      let splitDots = SplitText.create(indicatorDots, {
+        type: "chars",
+        charsClass: "chars",
+      });
+      const dotsTl = gsap.timeline({ repeat: -1 })
+      gsap.set([splitDots.chars, square], {
+        autoAlpha: 0,
+      })
+      dotsTl.to([splitDots.chars, square], {
+        autoAlpha: 1,
+        duration: 0.5,
+        ease: "power3.out",
+        stagger: 0.1,
+      })
+      .to([splitDots.chars, square], {
+        autoAlpha: 0,
+        duration: 0.5,
+        ease: "power3.out",
+        stagger: 0.1,
+      })
+    }
+
+
+    /* Middle Container */
     // Count to 100
     gsap.to(progress, {
       delay: 1,
@@ -57,9 +92,11 @@ export default function Preloader() {
       if (xRef.current) xRef.current.textContent = `X: ${textX.toFixed(0)}.0px`;
       if (yRef.current) yRef.current.textContent = `Y: ${textY.toFixed(0)}.0px`;
     };
-
+    IndicatorAnimation();
     gsap.ticker.add(updateMousePosition);
-    return () => gsap.ticker.remove(updateMousePosition);
+    return () => {
+      gsap.ticker.remove(updateMousePosition);
+    };
   }, { scope: container });
 
   return (
@@ -85,6 +122,7 @@ export default function Preloader() {
               viewBox="0 0 409 12"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
+              ref={rulerRef}
             >
               {Array.from({ length: lines }).map((_, i) => {
                 const x = i * gap + 0.25;
@@ -117,11 +155,11 @@ export default function Preloader() {
         </div>
       </div>
       <div className={styles.bottomContainer}>
-        <div className={styles.indicator}>
-          <div className={styles.square}></div>
+        <div className={styles.indicator} ref={indicatorRef}>
+          <div className={styles.square} ref={indicatorSquareRef}></div>
           <div>
-            <span>INITIALISING</span>
-            <span>...</span>
+            <span ref={indicatorTextRef}>INITIALISING</span>
+            <span ref={indicatorEllipsisRef}>...</span>
           </div>
         </div>
         <div className={styles.radarContainer}>
