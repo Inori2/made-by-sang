@@ -19,8 +19,8 @@ export default function Pattern() {
 
     // timing
     const itemDuration = 1;   // each plus fade in/out speed
-    const itemGap = 0.08;        // delay between items in same column
-    const colOverlap = 0.8;      // 👈 70%
+    const itemGap = 0.1;        // delay between items in same column
+    const colOverlap = 0.5;      // 👈 70%
 
     // How long one column takes (top -> bottom)
     const colDuration = (rows - 1) * itemGap + itemDuration;
@@ -62,7 +62,7 @@ export default function Pattern() {
           ease: "power2.out",
           stagger: itemGap,
         },
-        startTime + 0.35 // adjust this delay for how long it stays visible
+        startTime + 1 // adjust this delay for how long it stays visible
       );
     }
   }, patternRef);
