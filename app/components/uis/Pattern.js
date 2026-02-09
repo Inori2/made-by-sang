@@ -44,7 +44,7 @@ export default function Pattern() {
       // animate IN (top -> bottom)
       tl.to(
         col,
-        {
+        { delay: 0.3,
           autoAlpha: 1,
           duration: itemDuration,
           ease: "power2.out",

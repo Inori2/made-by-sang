@@ -1,5 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap");
-
+@import "locomotive-scroll/dist/locomotive-scroll.css";
 @import "tailwindcss";
 
 :root {
@@ -93,6 +93,8 @@
 }
 
 
+
+
 :root {
   --lightning-color: #bef264;
 }
@@ -157,5 +159,5 @@
 }
 
 .text-blink {
-  animation: blink 0.6s ease-out;
+  animation: blink 1s ease-out;
 }

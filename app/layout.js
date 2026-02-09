@@ -17,7 +17,7 @@ export default async function RootLayout({ children }) {
 
   return (
     <html lang="en">
-      <body>
+      <body >
         <SmoothScroll>
           <Navbar data={navbar.data} />
           {children}

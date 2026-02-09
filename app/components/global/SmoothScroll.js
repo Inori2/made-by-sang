@@ -1,24 +1,33 @@
 "use client";
-import gsap from "gsap";
-import { ReactLenis } from "lenis/react";
+
 import { useEffect, useRef } from "react";
+import gsap from "gsap";
+import LocomotiveScroll from "locomotive-scroll";
+import "locomotive-scroll/dist/locomotive-scroll.css";
 
 export default function SmoothScroll({ children }) {
-  const lenisRef = useRef();
+  const containerRef = useRef(null);
+  const locoRef = useRef(null);
 
   useEffect(() => {
-    function update(time) {
-      lenisRef.current?.lenis?.raf(time * 1000);
-    }
+    if (!containerRef.current) return;
 
-    gsap.ticker.add(update);
+    // Init locomotive
+    locoRef.current = new LocomotiveScroll({
+      el: containerRef.current,
+      smooth: true,
+      lerp: 0.08, // smoothness
+    });
 
-    return () => gsap.ticker.remove(update);
+    return () => {
+      locoRef.current?.destroy();
+      locoRef.current = null;
+    };
   }, []);
 
   return (
-    <ReactLenis root options={{ autoRaf: false }} ref={lenisRef}>
+    <div ref={containerRef} data-scroll-container>
       {children}
-    </ReactLenis>
+    </div>
   );
 }

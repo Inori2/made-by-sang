@@ -6,9 +6,11 @@ import { useRef } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { SplitText } from "gsap/SplitText";
+import { TextPlugin } from "gsap/TextPlugin";
+import { RoughEase } from "gsap/EasePack";
 import useMousePosition from "../../hooks/useMousePosition";
 
-gsap.registerPlugin(SplitText, useGSAP);
+gsap.registerPlugin(SplitText, TextPlugin, useGSAP);
 
 export default function Preloader() {
   const container = useRef(null);
@@ -17,10 +19,13 @@ export default function Preloader() {
   const indicatorSquareRef = useRef(null);
   const indicatorTextRef = useRef(null);
   const indicatorEllipsisRef = useRef(null);
-  const countNumber = useRef();
-  const progressBar = useRef();
-  const xRef = useRef();
-  const yRef = useRef();
+  const countNumber = useRef(null);
+  const folioRef = useRef(null);
+  const progressContainerRef = useRef(null);
+  const progressBar = useRef(null);
+  const xRef = useRef(null);
+  const yRef = useRef(null);
+  const listContainerRef = useRef(null);
   const lines = 69;
   const gap = 6;
   let progress = { value: 0 };
@@ -32,49 +37,198 @@ export default function Preloader() {
   });
 
   useGSAP(() => {
-    //Indicator Animation
-    const IndicatorAnimation = () => {
-      if (!indicatorRef.current) return;
-      const indicator = indicatorRef.current;
-      const indicatorText = indicatorTextRef.current;
-      const indicatorDots = indicatorEllipsisRef.current;
-      const square = indicatorSquareRef.current;
-      let splitDots = SplitText.create(indicatorDots, {
-        type: "chars",
-        charsClass: "chars",
-      });
-      const dotsTl = gsap.timeline({ repeat: -1 })
-      gsap.set([splitDots.chars, square], {
-        autoAlpha: 0,
-      })
-      dotsTl.to([splitDots.chars, square], {
-        autoAlpha: 1,
-        duration: 0.5,
+    if (!container.current) return;
+
+    //Appear Animation
+    const AppearAnimation = () => {
+      //Sitemap Animation
+      const SitemapAnimation = () => {
+        const q = gsap.utils.selector(listContainerRef.current);
+        const heading = q(".sitemap-heading")[0];
+        const listItems = q(".text-content");
+
+        const tl = gsap.timeline();
+
+        tl.from(heading, {
+          text: "",
+          stagger: 0.1,
+          duration: 1.2,
+          ease: "power3.out",
+        })
+        listItems.forEach((span, i) => {
+          const tl = gsap.timeline();
+          const originalText = span.textContent;
+
+          gsap.set(span, { text: "" });
+          tl.to(span, {
+            text: originalText,
+            duration: 1,
+            transformOrigin: "left",
+            ease: "power3.out",
+            stagger: {
+              each: 0.1,
+              from: "start",
+            },
+          }, i * 0.1)
+        })
+
+        return tl;
+      };
+
+      //Ruler Animation
+      const RulerAnimation = () => {
+        if (!rulerRef.current) return;
+        const ruler = rulerRef.current.querySelectorAll("line");
+        const tl = gsap.timeline();
+        tl.from(ruler, {
+          autoAlpha: 0,
+          duration: 0.5,
+          stagger: {
+            each: 0.01,
+            from: "random",
+          },
+          ease: RoughEase.config({
+            strength: 1,
+            points: 10,
+            randomize: true,
+            taper: "none",
+            clamp: false,
+          }),
+        });
+        return tl;
+      } 
+
+      //X,Y Indicator Animation
+      const XYIndicatorAnimation = () => {
+        if (!xRef.current || !yRef.current) return;
+        const xIndicator = xRef.current;
+        const yIndicator = yRef.current;
+        const folio = folioRef.current.querySelectorAll("span");
+        const tl = gsap.timeline({
+          onStart: () => {
+            gsap.ticker.remove(updateMousePosition);
+          },
+          onComplete: () => {
+            gsap.ticker.add(updateMousePosition);
+          }
+        });
+        tl.from([xIndicator, yIndicator], {
+          text: "",
+          autoAlpha: 0,
+          duration: 1.2,
+          ease: "power3.out",
+          stagger: {
+            each: 0.03,
+            from: "random",
+          },
+        });
+        tl.from(folio, {
+          text: "",
+          autoAlpha: 0,
+          duration: 1.2,
+          ease: "power3.out",
+          stagger: {
+            each: 0.1,
+            from: "end",
+          },
+        }, "-=1");
+        return tl;
+      }
+
+      const master = gsap.timeline();
+      master.add(SitemapAnimation(), 0);
+      master.add(RulerAnimation(), 0);
+      master.add(XYIndicatorAnimation(), 0);
+      return master;
+    };
+
+    //Loading Animation
+    const LoadingAnimation = () => {
+      //Indicator Animation
+      const IndicatorAnimation = () => {
+        if (!indicatorRef.current) return;
+        const indicator = indicatorRef.current;
+        const indicatorText = indicatorTextRef.current;
+        const indicatorDots = indicatorEllipsisRef.current;
+        const square = indicatorSquareRef.current;
+        // Split text into chars
+        let splitText = SplitText.create(indicatorText, {
+          type: "chars",
+          charsClass: "chars",
+        });
+        let splitDots = SplitText.create(indicatorDots, {
+          type: "chars",
+          charsClass: "chars",
+        });
+
+
+        const dotsTl = gsap.timeline({ repeat: -1 })
+        gsap.set([splitDots.chars, square], {
+          autoAlpha: 0,
+        })
+        dotsTl.to([splitDots.chars, square], {
+          autoAlpha: 1,
+          duration: 0.5,
+          ease: "power3.out",
+          stagger: 0.1,
+        })
+        .to([splitDots.chars, square], {
+          autoAlpha: 0,
+          duration: 0.5,
+          ease: "power3.out",
+          stagger: 0.1,
+        })
+      };
+      
+      //Count to 100
+      const CountTo100 = () => {
+        gsap.to(progress, {
+        duration: 3,
+        value: 100,
         ease: "power3.out",
-        stagger: 0.1,
+        onUpdate: () => {
+          countNumber.current.textContent = `${Math.round(progress.value)}.0`
+          progressBar.current.style.width = `${progress.value}%`
+        },
+        onComplete: () => {
+          let splitText = SplitText.create(countNumber.current, {
+            type: "chars",
+            charsClass: "chars",
+          });
+
+          splitText.chars.forEach((char) => {
+            char.classList.add("text-blink", "text-fade-in");
+            char.style.animationDelay = `${Math.random() * 0.8}s`;
+
+          })
+          gsap.to(countNumber.current, {
+            delay: 0.5,
+            autoAlpha: 0,
+            duration: 0.5,
+            ease: "power3.out",
+          })
+          gsap.to(progressContainerRef.current, {
+            autoAlpha: 0,
+            duration: 0.8,
+            ease: "power3.out",
+            onComplete: () => {
+              progressContainerRef.current.classList.add("text-fade-in","text-blink")
+            }
+          })
+        }
       })
-      .to([splitDots.chars, square], {
-        autoAlpha: 0,
-        duration: 0.5,
-        ease: "power3.out",
-        stagger: 0.1,
-      })
+      };
+
+      IndicatorAnimation();
+      CountTo100();
     }
 
+    //Ending Animation
+    const EndingAnimation = () => {
+      
+    }
 
-    /* Middle Container */
-    // Count to 100
-    gsap.to(progress, {
-      delay: 1,
-      duration: 3,
-      value: 100,
-      ease: "power3.out",
-      onUpdate: () => {
-        countNumber.current.textContent = `${Math.round(progress.value)}.0`
-        progressBar.current.style.width = `${progress.value}%`
-      }
-    })
-
+    //Ruler Animation
     // Mouse Position Tracking for X, Y indicators
     const updateMousePosition = () => {
       if (!container.current) return;
@@ -92,8 +246,12 @@ export default function Preloader() {
       if (xRef.current) xRef.current.textContent = `X: ${textX.toFixed(0)}.0px`;
       if (yRef.current) yRef.current.textContent = `Y: ${textY.toFixed(0)}.0px`;
     };
-    IndicatorAnimation();
-    gsap.ticker.add(updateMousePosition);
+    const master = gsap.timeline({
+      onComplete: () => {
+        gsap.ticker.add(updateMousePosition);
+      }
+    });
+    master.add(AppearAnimation(), 0);
     return () => {
       gsap.ticker.remove(updateMousePosition);
     };
@@ -103,14 +261,14 @@ export default function Preloader() {
     <div className={styles.preloader} ref={container}>
       <GridPattern amount={4} position="absolute" />
       <div className={styles.topContainer}>
-          <div className={`list-container ${styles.listContainer}`}>
-            <span className="list-heading">SITEMAP:</span>
+          <div className={styles.listContainer} ref={listContainerRef}>
+            <span className="sitemap-heading">SITEMAP:</span>
             <ul>
               {["INDEX", "ABOUT", "WORK", "PLAYGROUND", "CONTACT"].map(
                 (item, index) => (
                   <li key={index}>
-                    <span>{`>`}</span>
-                    <span>{item}</span>
+                    <span className="text-content">{`>`}</span>
+                    <span className="text-content">{item}</span>
                   </li>
                 ),
               )}
@@ -146,27 +304,27 @@ export default function Preloader() {
       </div>
       <div className={`middle-container ${styles.middleContainer}`}>
         <div className={styles.mouseIndicator}>
-          <span ref={xRef}>{`X: 0.0px`}</span>
-          <span ref={yRef}>{`Y: 0.0px`}</span>
+          <span ref={xRef}>X: 0.0px</span>
+          <span ref={yRef}>Y: 0.0px</span>
         </div>
         <div ref={countNumber}>0.0</div>
-        <div>
+        <div ref={folioRef}>
           <span>FOLIO '26</span>
         </div>
       </div>
       <div className={styles.bottomContainer}>
-        <div className={styles.indicator} ref={indicatorRef}>
+        <div className={`${styles.indicator}`} ref={indicatorRef}>
           <div className={styles.square} ref={indicatorSquareRef}></div>
           <div>
             <span ref={indicatorTextRef}>INITIALISING</span>
             <span ref={indicatorEllipsisRef}>...</span>
           </div>
         </div>
+        <div className={styles.progressContainer} ref={progressContainerRef}>
+          <div className={styles.progressBar} ref={progressBar}></div>
+        </div>
         <div className={styles.radarContainer}>
-          <Radar containerRef={container} />
-          <div className={styles.progressContainer}>
-            <div className={styles.progressBar} ref={progressBar}></div>
-          </div>
+          <Radar containerRef={container}/>
         </div>
       </div>
     </div>
