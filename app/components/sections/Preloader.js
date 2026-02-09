@@ -28,7 +28,7 @@ export default function Preloader() {
   const listContainerRef = useRef(null);
   const lines = 69;
   const gap = 6;
-  let progress = { value: 0 };
+  const progress = useRef({ value: 0 });
 
   const { positionRef } = useMousePosition({
     threshold: 2,
@@ -56,21 +56,15 @@ export default function Preloader() {
           ease: "power3.out",
         })
         listItems.forEach((span, i) => {
-          const tl = gsap.timeline();
           const originalText = span.textContent;
-
           gsap.set(span, { text: "" });
           tl.to(span, {
             text: originalText,
             duration: 1,
             transformOrigin: "left",
             ease: "power3.out",
-            stagger: {
-              each: 0.1,
-              from: "start",
-            },
-          }, i * 0.1)
-        })
+          }, i * 0.1);
+        });
 
         return tl;
       };
@@ -100,18 +94,11 @@ export default function Preloader() {
 
       //X,Y Indicator Animation
       const XYIndicatorAnimation = () => {
-        if (!xRef.current || !yRef.current) return;
+        if (!xRef.current || !yRef.current || !folioRef.current) return;
         const xIndicator = xRef.current;
         const yIndicator = yRef.current;
         const folio = folioRef.current.querySelectorAll("span");
-        const tl = gsap.timeline({
-          onStart: () => {
-            gsap.ticker.remove(updateMousePosition);
-          },
-          onComplete: () => {
-            gsap.ticker.add(updateMousePosition);
-          }
-        });
+        const tl = gsap.timeline();
         tl.from([xIndicator, yIndicator], {
           text: "",
           autoAlpha: 0,
@@ -135,6 +122,8 @@ export default function Preloader() {
         return tl;
       }
 
+      //Indicate
+
       const master = gsap.timeline();
       master.add(SitemapAnimation(), 0);
       master.add(RulerAnimation(), 0);
@@ -151,15 +140,14 @@ export default function Preloader() {
         const indicatorText = indicatorTextRef.current;
         const indicatorDots = indicatorEllipsisRef.current;
         const square = indicatorSquareRef.current;
+        let splitDotsInstance = [];
         // Split text into chars
-        let splitText = SplitText.create(indicatorText, {
-          type: "chars",
-          charsClass: "chars",
-        });
         let splitDots = SplitText.create(indicatorDots, {
           type: "chars",
           charsClass: "chars",
         });
+
+        splitDotsInstance.push(splitDots);
 
 
         const dotsTl = gsap.timeline({ repeat: -1 })
@@ -187,8 +175,8 @@ export default function Preloader() {
         value: 100,
         ease: "power3.out",
         onUpdate: () => {
-          countNumber.current.textContent = `${Math.round(progress.value)}.0`
-          progressBar.current.style.width = `${progress.value}%`
+           if (countNumber.current) countNumber.current.textContent = `${Math.round(progress.value)}.0`;
+           if (progressBar.current) progressBar.current.style.width = `${progress.value}%`;
         },
         onComplete: () => {
           let splitText = SplitText.create(countNumber.current, {
@@ -252,6 +240,8 @@ export default function Preloader() {
       }
     });
     master.add(AppearAnimation(), 0);
+    master.add(LoadingAnimation(), 0);
+    master.add(EndingAnimation(), 0);
     return () => {
       gsap.ticker.remove(updateMousePosition);
     };
