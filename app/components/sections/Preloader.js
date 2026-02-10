@@ -101,17 +101,15 @@ export default function Preloader() {
         const tl = gsap.timeline();
         tl.from([xIndicator, yIndicator], {
           text: "",
-          autoAlpha: 0,
           duration: 1.2,
           ease: "power3.out",
           stagger: {
             each: 0.03,
-            from: "random",
+            from: "start",
           },
         });
         tl.from(folio, {
           text: "",
-          autoAlpha: 0,
           duration: 1.2,
           ease: "power3.out",
           stagger: {
@@ -240,8 +238,8 @@ export default function Preloader() {
       }
     });
     master.add(AppearAnimation(), 0);
-    master.add(LoadingAnimation(), 0);
-    master.add(EndingAnimation(), 0);
+    master.add(LoadingAnimation());
+    master.add(EndingAnimation()  );
     return () => {
       gsap.ticker.remove(updateMousePosition);
     };
