@@ -4,6 +4,7 @@ import { useRef, useEffect } from "react";
 
 
 export default function Pattern() {
+  const patternContainer = useRef(null);
   const patternRef = useRef(null);
 
   useEffect(() => {
@@ -12,8 +13,9 @@ export default function Pattern() {
 
     const rows = 4;
     const cols = 7;
-
+    gsap.set(patternContainer.current, { autoAlpha: 1 });
     gsap.set(paths, { autoAlpha: 0 });
+
 
     const tl = gsap.timeline({ repeat: -1, repeatDelay: 0.5 });
 
@@ -74,7 +76,7 @@ export default function Pattern() {
 
 
     return (
-          <div className={styles.pattern}>
+          <div className={styles.pattern} ref={patternContainer}>
             <svg width="108" height="60" viewBox="0 0 108 60" fill="none" xmlns="http://www.w3.org/2000/svg" ref={patternRef}>
               <path d="M6.59961 54.5996H12V53.4004H6.59961V48H5.40039V53.4004H0V54.5996H5.40039V60H6.59961V54.5996Z" fill="#FAFAFA"/>
               <path d="M6.59961 38.5996H12V37.4004H6.59961V32H5.40039V37.4004H0V38.5996H5.40039V44H6.59961V38.5996Z" fill="#FAFAFA"/>

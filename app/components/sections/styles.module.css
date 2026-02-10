@@ -43,10 +43,19 @@
 
 .listContainer span:first-child {
     color: var(--primary-300);
+    visibility: hidden;
+}
+
+.listContainer li span {
+    visibility: hidden;
 }
 
 .rulerIndicator {
     justify-self: center;
+}
+
+.rulerIndicator svg line {
+    visibility: hidden;
 }
 
 /*Middle Container*/
@@ -72,10 +81,18 @@
     justify-self: end;
 }
 
+.middleContainer div:last-child span {
+    visibility: hidden;
+}
+
 .mouseIndicator {
     display: flex;
     gap: 0.25rem;
     flex-direction: column;
+}
+
+.mouseIndicator span {
+    visibility: hidden;
 }
 
 /*Bottom Container*/

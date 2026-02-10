@@ -48,6 +48,8 @@ export default function Preloader() {
         const listItems = q(".text-content");
 
         const tl = gsap.timeline();
+        
+        gsap.set([heading, listItems], { autoAlpha: 1 });
 
         tl.from(heading, {
           text: "",
@@ -74,6 +76,7 @@ export default function Preloader() {
         if (!rulerRef.current) return;
         const ruler = rulerRef.current.querySelectorAll("line");
         const tl = gsap.timeline();
+        gsap.set(ruler, { autoAlpha: 1 });
         tl.from(ruler, {
           autoAlpha: 0,
           duration: 0.5,
@@ -99,6 +102,7 @@ export default function Preloader() {
         const yIndicator = yRef.current;
         const folio = folioRef.current.querySelectorAll("span");
         const tl = gsap.timeline();
+        gsap.set([xIndicator, yIndicator, folio], { autoAlpha: 1 });
         tl.from([xIndicator, yIndicator], {
           text: "",
           duration: 1.2,
@@ -120,7 +124,13 @@ export default function Preloader() {
         return tl;
       }
 
-      //Indicate
+      //Indicator Animation
+      const IndicatorAnimation = () => {
+        if (!indicatorRef.current) return;
+        const q = gsap.utils.selector(indicatorRef.current);
+        const indicatorSquare = q("div")[0];
+
+      };
 
       const master = gsap.timeline();
       master.add(SitemapAnimation(), 0);
@@ -131,44 +141,11 @@ export default function Preloader() {
 
     //Loading Animation
     const LoadingAnimation = () => {
-      //Indicator Animation
-      const IndicatorAnimation = () => {
-        if (!indicatorRef.current) return;
-        const indicator = indicatorRef.current;
-        const indicatorText = indicatorTextRef.current;
-        const indicatorDots = indicatorEllipsisRef.current;
-        const square = indicatorSquareRef.current;
-        let splitDotsInstance = [];
-        // Split text into chars
-        let splitDots = SplitText.create(indicatorDots, {
-          type: "chars",
-          charsClass: "chars",
-        });
-
-        splitDotsInstance.push(splitDots);
-
-
-        const dotsTl = gsap.timeline({ repeat: -1 })
-        gsap.set([splitDots.chars, square], {
-          autoAlpha: 0,
-        })
-        dotsTl.to([splitDots.chars, square], {
-          autoAlpha: 1,
-          duration: 0.5,
-          ease: "power3.out",
-          stagger: 0.1,
-        })
-        .to([splitDots.chars, square], {
-          autoAlpha: 0,
-          duration: 0.5,
-          ease: "power3.out",
-          stagger: 0.1,
-        })
-      };
+      const tl = gsap.timeline();
       
       //Count to 100
       const CountTo100 = () => {
-        gsap.to(progress, {
+        tl.to(progress, {
         duration: 3,
         value: 100,
         ease: "power3.out",
@@ -187,13 +164,13 @@ export default function Preloader() {
             char.style.animationDelay = `${Math.random() * 0.8}s`;
 
           })
-          gsap.to(countNumber.current, {
+          tl.to(countNumber.current, {
             delay: 0.5,
             autoAlpha: 0,
             duration: 0.5,
             ease: "power3.out",
           })
-          gsap.to(progressContainerRef.current, {
+          tl.to(progressContainerRef.current, {
             autoAlpha: 0,
             duration: 0.8,
             ease: "power3.out",
@@ -202,11 +179,10 @@ export default function Preloader() {
             }
           })
         }
-      })
+      });
       };
-
-      IndicatorAnimation();
-      CountTo100();
+      tl.add(CountTo100(), 0);
+      return tl;
     }
 
     //Ending Animation
@@ -238,7 +214,7 @@ export default function Preloader() {
       }
     });
     master.add(AppearAnimation(), 0);
-    master.add(LoadingAnimation());
+    master.add(LoadingAnimation(), "+=0.5");
     master.add(EndingAnimation()  );
     return () => {
       gsap.ticker.remove(updateMousePosition);
@@ -302,10 +278,10 @@ export default function Preloader() {
       </div>
       <div className={styles.bottomContainer}>
         <div className={`${styles.indicator}`} ref={indicatorRef}>
-          <div className={styles.square} ref={indicatorSquareRef}></div>
+          <div className={styles.square}></div>
           <div>
-            <span ref={indicatorTextRef}>INITIALISING</span>
-            <span ref={indicatorEllipsisRef}>...</span>
+            <span>INITIALISING</span>
+            <span>...</span>
           </div>
         </div>
         <div className={styles.progressContainer} ref={progressContainerRef}>
