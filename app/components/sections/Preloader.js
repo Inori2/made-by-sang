@@ -114,7 +114,7 @@ export default function Preloader() {
           ease: "power3.out",
           stagger: {
             each: 0.1,
-            from: "end",
+            from: "start",
           },
         }, "-=1");
         return tl;
