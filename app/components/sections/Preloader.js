@@ -37,82 +37,121 @@ export default function Preloader() {
   });
 
   useGSAP(() => {
+  if (!container.current) return;
+
+  // Keep references so cleanup can access them
+  let appearMaster;
+  let mainMaster;
+  let splitInstance = null;
+
+  // MousePosition Animation (ticker callback)
+  const updateMousePosition = () => {
     if (!container.current) return;
 
-    //Appear Animation
-    const AppearAnimation = () => {
-      //Sitemap Animation
-      const SitemapAnimation = () => {
-        const q = gsap.utils.selector(listContainerRef.current);
-        const heading = q(".sitemap-heading")[0];
-        const listItems = q(".text-content");
+    const { x, y } = positionRef.current;
+    const containerBounds = container.current.getBoundingClientRect();
 
-        const tl = gsap.timeline();
-        
-        gsap.set([heading, listItems], { autoAlpha: 1 });
+    const containerX = x - containerBounds.left;
+    const containerY = y - containerBounds.top;
 
-        tl.from(heading, {
-          text: "",
-          stagger: 0.1,
-          duration: 1.2,
-          ease: "power3.out",
-        })
-        listItems.forEach((span, i) => {
-          const originalText = span.textContent;
-          gsap.set(span, { text: "" });
-          tl.to(span, {
+    const textX = Math.max(0, Math.min(containerX, containerBounds.width));
+    const textY = Math.max(0, Math.min(containerY, containerBounds.height));
+
+    if (xRef.current) xRef.current.textContent = `X: ${textX.toFixed(0)}.0px`;
+    if (yRef.current) yRef.current.textContent = `Y: ${textY.toFixed(0)}.0px`;
+  };
+
+  // -------------------------
+  // Appear Animation
+  // -------------------------
+  const AppearAnimation = () => {
+    const SitemapAnimation = () => {
+      const q = gsap.utils.selector(listContainerRef.current);
+      const heading = q(".sitemap-heading")[0];
+      const listItems = q(".text-content");
+
+      const tl = gsap.timeline();
+
+      gsap.set([heading, listItems], { autoAlpha: 1 });
+
+      tl.from(heading, {
+        text: "",
+        stagger: 0.1,
+        duration: 1.2,
+        ease: "power3.out",
+      });
+
+      listItems.forEach((span, i) => {
+        const originalText = span.textContent;
+        gsap.set(span, { text: "" });
+
+        tl.to(
+          span,
+          {
             text: originalText,
             duration: 1,
             transformOrigin: "left",
             ease: "power3.out",
-          }, i * 0.1);
-        });
-
-        return tl;
-      };
-
-      //Ruler Animation
-      const RulerAnimation = () => {
-        if (!rulerRef.current) return;
-        const ruler = rulerRef.current.querySelectorAll("line");
-        const tl = gsap.timeline();
-        gsap.set(ruler, { autoAlpha: 1 });
-        tl.from(ruler, {
-          autoAlpha: 0,
-          duration: 0.5,
-          stagger: {
-            each: 0.01,
-            from: "random",
           },
-          ease: RoughEase.config({
-            strength: 1,
-            points: 5,
-            randomize: true,
-            taper: "none",
-            clamp: false,
-          }),
-        });
-        return tl;
-      } 
+          i * 0.1
+        );
+      });
 
-      //X,Y Indicator Animation
-      const XYIndicatorAnimation = () => {
-        if (!xRef.current || !yRef.current || !folioRef.current) return;
-        const xIndicator = xRef.current;
-        const yIndicator = yRef.current;
-        const folio = folioRef.current.querySelectorAll("span");
-        const tl = gsap.timeline();
-        gsap.set([xIndicator, yIndicator, folio], { autoAlpha: 1 });
-        tl.from([xIndicator, yIndicator], {
-          text: "",
-          duration: 1.2,
-          ease: "power3.out",
-          stagger: {
-            each: 0.03,
-            from: "start",
-          },
-        });
-        tl.from(folio, {
+      return tl;
+    };
+
+    const RulerAnimation = () => {
+      if (!rulerRef.current) return gsap.timeline();
+
+      const ruler = rulerRef.current.querySelectorAll("line");
+      const tl = gsap.timeline();
+
+      gsap.set(ruler, { autoAlpha: 1 });
+
+      tl.from(ruler, {
+        autoAlpha: 0,
+        duration: 0.5,
+        stagger: {
+          each: 0.01,
+          from: "random",
+        },
+        ease: RoughEase.config({
+          strength: 1,
+          points: 5,
+          randomize: true,
+          taper: "none",
+          clamp: false,
+        }),
+      });
+
+      return tl;
+    };
+
+    const XYIndicatorAnimation = () => {
+      if (!xRef.current || !yRef.current || !folioRef.current)
+        return gsap.timeline();
+
+      const xIndicator = xRef.current;
+      const yIndicator = yRef.current;
+      const folio = folioRef.current.querySelectorAll("span");
+
+      const tl = gsap.timeline();
+
+      gsap.set([xIndicator, yIndicator, folio], { autoAlpha: 1 });
+
+      tl.from([xIndicator, yIndicator], {
+        text: "",
+        duration: 1.2,
+        ease: "power3.out",
+        stagger: {
+          each: 0.03,
+          from: "start",
+        },
+      });
+
+      tl.from(
+        folio,
+        {
           text: "",
           duration: 1.2,
           ease: "power3.out",
@@ -120,107 +159,111 @@ export default function Preloader() {
             each: 0.1,
             from: "start",
           },
-        }, "-=1");
-        return tl;
-      }
+        },
+        "-=1"
+      );
 
-      //Indicator Animation
-      const IndicatorAnimation = () => {
-        if (!indicatorRef.current) return;
-        const q = gsap.utils.selector(indicatorRef.current);
-        const indicatorSquare = q("div")[0];
-
-      };
-
-      //MousePosiion Animation
-      const updateMousePosition = () => {
-      if (!container.current) return;
-
-      const { x, y } = positionRef.current;
-      const containerBounds = container.current.getBoundingClientRect();
-
-      // Calculate container-relative position
-      const containerX = x - containerBounds.left;
-      const containerY = y - containerBounds.top;
-      const textX = Math.max(0, Math.min(containerX, containerBounds.width));
-      const textY = Math.max(0, Math.min(containerY, containerBounds.height));
-
-      // Update indicator text
-      if (xRef.current) xRef.current.textContent = `X: ${textX.toFixed(0)}.0px`;
-      if (yRef.current) yRef.current.textContent = `Y: ${textY.toFixed(0)}.0px`;
+      return tl;
     };
 
+    // IMPORTANT: store appearMaster so cleanup can kill it if needed
+    appearMaster = gsap.timeline({
+      onComplete: () => {
+        // ✅ START ticker here
+        gsap.ticker.add(updateMousePosition);
+      },
+    });
 
-      const master = gsap.timeline({
-        onComplete: () => {
-          gsap.ticker.add(updateMousePosition);
-        }
-      });
-      master.add(SitemapAnimation(), 0);
-      master.add(RulerAnimation(), 0);
-      master.add(XYIndicatorAnimation(), 0);
-      return master;
-    };
+    appearMaster.add(SitemapAnimation(), 0);
+    appearMaster.add(RulerAnimation(), 0);
+    appearMaster.add(XYIndicatorAnimation(), 0);
 
-    //Loading Animation
-    const LoadingAnimation = () => {
-      const tl = gsap.timeline();
-      
-      //Count to 100
-      const CountTo100 = () => {
-        tl.to(progress, {
+    return appearMaster;
+  };
+
+  // -------------------------
+  // Loading Animation
+  // -------------------------
+  const LoadingAnimation = () => {
+    const tl = gsap.timeline();
+
+    const CountTo100 = () => {
+      tl.to(progress, {
         duration: 3,
         value: 100,
         ease: "power3.out",
         onUpdate: () => {
-           if (countNumber.current) countNumber.current.textContent = `${Math.round(progress.value)}.0`;
-           if (progressBar.current) progressBar.current.style.width = `${progress.value}%`;
+          if (countNumber.current)
+            countNumber.current.textContent = `${Math.round(progress.value)}.0`;
+
+          if (progressBar.current)
+            progressBar.current.style.width = `${progress.value}%`;
         },
         onComplete: () => {
-          let splitText = SplitText.create(countNumber.current, {
-            type: "chars",
-            charsClass: "chars",
-          });
+          // ✅ Store SplitText instance so we can revert later
+          if (countNumber.current) {
+            splitInstance = SplitText.create(countNumber.current, {
+              type: "chars",
+              charsClass: "chars",
+            });
 
-          splitText.chars.forEach((char) => {
-            char.classList.add("text-blink", "text-fade-in");
-            char.style.animationDelay = `${Math.random() * 0.8}s`;
+            splitInstance.chars.forEach((char) => {
+              char.classList.add("text-blink", "text-fade-in");
+              char.style.animationDelay = `${Math.random() * 0.8}s`;
+            });
+          }
 
-          })
           tl.to(countNumber.current, {
             delay: 0.5,
             autoAlpha: 0,
             duration: 0.5,
             ease: "power3.out",
-          })
+          });
+
           tl.to(progressContainerRef.current, {
             autoAlpha: 0,
             duration: 0.8,
             ease: "power3.out",
             onComplete: () => {
-              progressContainerRef.current.classList.add("text-fade-in","text-blink")
-            }
-          })
-        }
+              progressContainerRef.current?.classList.add(
+                "text-fade-in",
+                "text-blink"
+              );
+            },
+          });
+        },
       });
-      };
-      tl.add(CountTo100(), 0);
-      return tl;
-    }
-
-    //Ending Animation
-    const EndingAnimation = () => {
-      
-    }
-
-    const master = gsap.timeline();
-    master.add(AppearAnimation(), 0);
-    master.add(LoadingAnimation(), "+=0.5");
-    master.add(EndingAnimation()  );
-    return () => {
-      gsap.killTweensOf(container.current);
     };
-  }, { scope: container });
+
+    tl.add(CountTo100(), 0);
+    return tl;
+  };
+
+  // -------------------------
+  // Ending Animation
+  // -------------------------
+  const EndingAnimation = () => {
+    return gsap.timeline();
+  };
+
+  // MAIN MASTER
+  mainMaster = gsap.timeline();
+  mainMaster.add(AppearAnimation(), 0);
+  mainMaster.add(LoadingAnimation(), "+=0.5");
+  mainMaster.add(EndingAnimation());
+
+  // ✅ CLEANUP (THIS is where the fixes go)
+  return () => {
+    gsap.ticker.remove(updateMousePosition);
+    splitInstance?.revert();
+    splitInstance = null;
+
+    appearMaster?.kill();
+    mainMaster?.kill();
+    gsap.killTweensOf("*");
+  };
+}, { scope: container });
+
 
   return (
     <div className={styles.preloader} ref={container}>
