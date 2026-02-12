@@ -86,7 +86,7 @@ export default function Preloader() {
           },
           ease: RoughEase.config({
             strength: 1,
-            points: 10,
+            points: 5,
             randomize: true,
             taper: "none",
             clamp: false,
@@ -132,7 +132,30 @@ export default function Preloader() {
 
       };
 
-      const master = gsap.timeline();
+      //MousePosiion Animation
+      const updateMousePosition = () => {
+      if (!container.current) return;
+
+      const { x, y } = positionRef.current;
+      const containerBounds = container.current.getBoundingClientRect();
+
+      // Calculate container-relative position
+      const containerX = x - containerBounds.left;
+      const containerY = y - containerBounds.top;
+      const textX = Math.max(0, Math.min(containerX, containerBounds.width));
+      const textY = Math.max(0, Math.min(containerY, containerBounds.height));
+
+      // Update indicator text
+      if (xRef.current) xRef.current.textContent = `X: ${textX.toFixed(0)}.0px`;
+      if (yRef.current) yRef.current.textContent = `Y: ${textY.toFixed(0)}.0px`;
+    };
+
+
+      const master = gsap.timeline({
+        onComplete: () => {
+          gsap.ticker.add(updateMousePosition);
+        }
+      });
       master.add(SitemapAnimation(), 0);
       master.add(RulerAnimation(), 0);
       master.add(XYIndicatorAnimation(), 0);
@@ -190,34 +213,12 @@ export default function Preloader() {
       
     }
 
-    //Ruler Animation
-    // Mouse Position Tracking for X, Y indicators
-    const updateMousePosition = () => {
-      if (!container.current) return;
-
-      const { x, y } = positionRef.current;
-      const containerBounds = container.current.getBoundingClientRect();
-
-      // Calculate container-relative position
-      const containerX = x - containerBounds.left;
-      const containerY = y - containerBounds.top;
-      const textX = Math.max(0, Math.min(containerX, containerBounds.width));
-      const textY = Math.max(0, Math.min(containerY, containerBounds.height));
-
-      // Update indicator text
-      if (xRef.current) xRef.current.textContent = `X: ${textX.toFixed(0)}.0px`;
-      if (yRef.current) yRef.current.textContent = `Y: ${textY.toFixed(0)}.0px`;
-    };
-    const master = gsap.timeline({
-      onComplete: () => {
-        gsap.ticker.add(updateMousePosition);
-      }
-    });
+    const master = gsap.timeline();
     master.add(AppearAnimation(), 0);
     master.add(LoadingAnimation(), "+=0.5");
     master.add(EndingAnimation()  );
     return () => {
-      gsap.ticker.remove(updateMousePosition);
+      gsap.killTweensOf(container.current);
     };
   }, { scope: container });
 
