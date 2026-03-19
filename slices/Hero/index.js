@@ -5,7 +5,7 @@
  */
 "use client";
 import { PrismicRichText } from "@prismicio/react";
-import Bttn from "@/app/components/ui/Bttn";
+import Bttn from "@/app/components/ui/Bttn/Bttn";
 import { useRef } from "react";
 const Hero = ({ slice }) => {
   const btnRef = useRef(null);

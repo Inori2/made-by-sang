@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { asImageSrc } from "@prismicio/client";
 
 import { createClient } from "@/prismicio";
-import HomeClients from "./components/sections/HomeClients";
+import HomeClients from "./components/sections/HomeClients/HomeClients";
 
 export default async function Page() {
   const client = createClient();

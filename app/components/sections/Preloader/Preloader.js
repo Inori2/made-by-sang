@@ -1,14 +1,14 @@
 import styles from "./styles.module.css"
-import GridPattern from "../global/GridPattern";
-import Radar from "../ui/Radar";
-import Pattern from "../ui/Pattern";
+import GridPattern from "../../global/GridPattern/GridPattern";
+import Radar from "../../ui/Radar/Radar";
+import Pattern from "../../ui/Pattern/Pattern";
 import { useRef } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { SplitText } from "gsap/SplitText";
 import { TextPlugin } from "gsap/TextPlugin";
 import { RoughEase } from "gsap/EasePack";
-import useMousePosition from "../../hooks/useMousePosition";
+import useMousePosition from "../../../hooks/useMousePosition";
 
 gsap.registerPlugin(SplitText, TextPlugin, useGSAP);
 
@@ -316,8 +316,8 @@ export default function Preloader() {
           <span ref={yRef}>Y: 0.0px</span>
         </div>
         <div ref={countNumber}>0.0</div>
-        <div ref={folioRef}>
-          <span>FOLIO '26</span>
+        <div>
+          <span>FOLIO &apos;26</span>
         </div>
       </div>
       <div className={styles.bottomContainer}>

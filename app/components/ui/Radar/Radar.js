@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef } from 'react'
-import RadarSquare from './RadarSquare'
+import RadarSquare from '../RadarSquare/RadarSquare'
 import styles from './Radar.module.css'
 
 export default function Radar({ containerRef, className = '' }) {

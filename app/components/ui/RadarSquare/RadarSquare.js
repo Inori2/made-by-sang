@@ -2,7 +2,7 @@
 
 import { useRef, useEffect } from 'react'
 import gsap from 'gsap'
-import useMousePosition from '../../hooks/useMousePosition'
+import useMousePosition from '../../../hooks/useMousePosition'
 import styles from './RadarSquare.module.css'
 
 export default function RadarSquare({
