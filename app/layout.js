@@ -2,6 +2,7 @@ import "./globals.css";
 import { createClient } from "@/prismicio";
 import SmoothScroll from "./components/global/SmoothScroll/SmoothScroll";
 import Navbar from "./components/global/Navbar/Navbar";
+import TitleChanger from "./components/global/TitleChanger/TitleChanger";
 
 export const metadata = {
   title: "Made by Sang",
@@ -19,6 +20,7 @@ export default async function RootLayout({ children }) {
     <html lang="en">
       <body >
         <SmoothScroll>
+          <TitleChanger />
           <Navbar data={navbar.data} />
           {children}
         </SmoothScroll>
