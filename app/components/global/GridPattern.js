@@ -1,16 +1,16 @@
 export default function GridPattern({
-  amount = 4,
+  amount = 2,
   position = "absolute",
   className,
 }) {
   return (
     <div
-      className={`${position} inset-0 flex items-center justify-center w-full h-full px-5 ${className ?? ""}`}
+      className={`${position} inset-0 grid grid-cols-4 px-5 pointer-events-none ${className ?? ""}`}
     >
       {Array.from({ length: amount }).map((_, i) => (
         <div
           key={i}
-          className="w-full h-full border-l-[0.3px] border-r-[0.3px] border-neutral-900"
+          className={`w-full h-full border-l-[0.3px] border-r-[0.3px] border-neutral-900 ${i === 0 ? "col-start-2" : ""}`}
         ></div>
       ))}
     </div>

@@ -1,8 +1,8 @@
 "use client";
 import { useRef } from "react";
 import Link from "next/link";
-import Logo from "../ui/Logo";
-import Btn from "../ui/Btn";
+import Logo from "../../ui/Logo";
+import Bttn from "../../ui/Bttn";
 
 export default function Navbar({ data }) {
   const logoRef = useRef(null);
@@ -12,7 +12,7 @@ export default function Navbar({ data }) {
       <Link className="uppercase" href="/">
         <Logo label={data.logo} ref={logoRef} />
       </Link>
-      <Btn
+      <Bttn
         className="relative px-4 py-2 border border-(--secondary-900) bg-(--primary-950) uppercase cursor-pointer"
         label="menu"
         ref={menuRef}
