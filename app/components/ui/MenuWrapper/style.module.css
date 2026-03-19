@@ -2,7 +2,7 @@
   display: grid;
   grid-template-columns: 1fr 0.5fr;
   width: calc(100% - 40px);
-  height: 500px;
+  height: fit-content;
   background-color: var(--primary-950);
   border: 1px solid var(--primary-800);
   max-width: 960px;
@@ -16,9 +16,42 @@
   flex-direction: column;
   gap: clamp(1rem, 2vw, 1.25rem)
 }
+.menuLeft ul {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1rem, 2vw, 1.25rem);
+  margin-top: clamp(1rem, 2vw, 1.25rem);
+  margin-bottom: clamp(1rem, 2vw, 1.25rem);
+}
 
-.menuListItem a {
+.menuListItemContent {
+  display: flex;
+  align-items: center;
+  gap: clamp(1.25rem, 1vw, 1.5rem);
   color: var(--primary-50);
+  width: 100%;
+}
+
+.menuListItemContent > span:first-child {
+  font-size: clamp(1.25rem, 2vw, 1.5rem);
+  font-weight: 400;
+  color: var(--primary-500)
+}
+
+.menuItemTextSlot {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-size: clamp(4rem, 4vw, 5rem);
+  font-weight: 500;
+  height: 1em;
+  line-height: 1;
+}
+
+.menuItemTextSlot span {
+  white-space: nowrap;
+  display: block;
+  line-height: 1;
 }
 
 .menuRight {

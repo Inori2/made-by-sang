@@ -11,7 +11,7 @@ export default function TitleChanger() {
     const handleVisibilityChange = () => {
       if (document.hidden) {
         timerRef.current = setTimeout(() => {
-          document.title = "Comeback I Miss You";
+          document.title = "Hey!!!";
         }, 2000);
       } else {
         clearTimeout(timerRef.current);
