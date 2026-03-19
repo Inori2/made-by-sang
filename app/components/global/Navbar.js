@@ -1,8 +1,8 @@
 "use client";
 import { useRef } from "react";
 import Link from "next/link";
-import Logo from "../uis/Logo";
-import Btn from "../uis/Btn";
+import Logo from "../ui/Logo";
+import Btn from "../ui/Btn";
 
 export default function Navbar({ data }) {
   const logoRef = useRef(null);

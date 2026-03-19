@@ -1,7 +1,7 @@
 import styles from "./styles.module.css"
 import GridPattern from "../global/GridPattern";
-import Radar from "../uis/Radar";
-import Pattern from "../uis/Pattern";
+import Radar from "../ui/Radar";
+import Pattern from "../ui/Pattern";
 import { useRef } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
