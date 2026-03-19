@@ -7,7 +7,7 @@ import { ScrambleTextPlugin } from "gsap/ScrambleTextPlugin";
 import { TextPlugin } from "gsap/TextPlugin";
 gsap.registerPlugin(SplitText, RoughEase, ScrambleTextPlugin, TextPlugin);
 
-export default function Bttn({
+export default function Btn({
   label,
   className,
 }) {
