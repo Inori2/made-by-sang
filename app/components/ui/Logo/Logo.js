@@ -1,15 +1,13 @@
 "use client";
 import { useRef, useEffect } from "react";
-import gsap from "gsap";
-import ScrambleTextPlugin from "gsap/ScrambleTextPlugin";
-import { RoughEase } from "gsap/EasePack";
-gsap.registerPlugin(ScrambleTextPlugin, RoughEase);
+import Link from "next/link";
+import style from "./style.module.css";
 
 export default function Logo({ ref, label }) {
 
   return (
-    <span className="logo" ref={ref}>
+    <Link href="/" className={style.logo} ref={ref}>
       {label}
-    </span>
+    </Link>
   );
 }
