@@ -35,21 +35,24 @@ export default function Navbar({ data }) {
     // Base CSS width is 960px. Timeline animates it up to 1240px.
     tl.current.to(navbarRef.current, {
       maxWidth: "1240px",
-      duration: 1,
+      duration: 0.5,
       ease: "power2.inOut",
-      borderRadius: "8px",
     });
 
     return () => ctx.revert();
   }, []);
 
+  const handleMenuLinkClick = () => {
+    setIsOpen(true);
+  };
+
   useEffect(() => {
     if (tl.current) {
-      // Assuming isOpen=true means you want the narrowed navbar (960px), 
-      // reversing goes to the start (960px), playing goes to end (1240px)
       if (isOpen) {
+        // Menu is closed: reverse timeline (collapse navbar)
         tl.current.reverse();
       } else {
+        // Menu is open: play timeline forward (expand navbar)
         tl.current.play();
       }
     }
@@ -66,7 +69,7 @@ export default function Navbar({ data }) {
         ref={menuRef}
       />
     </div>
-    <MenuWrapper isOpen={isOpen} />
+    <MenuWrapper isOpen={isOpen} onLinkClick={handleMenuLinkClick} />
     </nav>
     </>
   );

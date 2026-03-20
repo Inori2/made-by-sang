@@ -1,16 +1,19 @@
 .menuWrapper {
   display: grid;
-  grid-template-columns: 1fr 0.5fr;
+  grid-template-columns: 1fr 1fr 1fr;
   width: calc(100% - 40px);
-  height: fit-content;
   background-color: var(--primary-950);
-  border: 1px solid var(--primary-800);
+  border-left: 1px solid var(--primary-800);
+  border-right: 1px solid var(--primary-800);
+  border-bottom: 1px solid var(--primary-800);
   max-width: 960px;
   min-width: 300px;
+  padding: clamp(1rem, 2vw, 1.25rem);
+  gap: 1rem;
 }
 
 .menuLeft {
-  border-right: 1px solid var(--primary-800);
+  border: 1px solid var(--primary-800);
   padding: clamp(1rem, 2vw, 1.25rem);
   display: flex;
   flex-direction: column;
@@ -22,6 +25,19 @@
   gap: clamp(1rem, 2vw, 1.25rem);
   margin-top: clamp(1rem, 2vw, 1.25rem);
   margin-bottom: clamp(1rem, 2vw, 1.25rem);
+}
+.menuCenter {
+  border: 1px solid var(--primary-800);
+  height: 100%;
+}
+
+.menuRight {
+  border: 1px solid var(--primary-800);
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(-130deg, var(--primary-900) 0%, var(--primary-950) 50%);
 }
 
 .menuListItemContent {
@@ -54,13 +70,7 @@
   line-height: 1;
 }
 
-.menuRight {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  overflow: hidden;
-  background: linear-gradient(-130deg, var(--primary-900) 0%, var(--primary-950) 50%);
-}
+
   
 .splineCanvas {
   position: absolute;
@@ -78,5 +88,9 @@
     width: calc(100% - 30px);
   }
   .menuRight {
-    display: none;}
+    display: none;
+  }
+  .splineCanvas {
+    display: none;
+  }
 }
