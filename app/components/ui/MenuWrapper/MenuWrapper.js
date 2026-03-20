@@ -55,6 +55,10 @@ export default function MenuWrapper({ isOpen, onLinkClick }) {
           each: 0.1,
           from: "center",
         },
+        onComplete: () => {
+          wrapperRef.current.style.position = "relative";
+          wrapperRef.current.style.top = "0";
+        }
       }, "<0.1"); // Start 0.1s after clipPath begins
   }, []);
 
@@ -125,9 +129,11 @@ useEffect(() => {
     <div
       className={style.menuWrapper}
       ref={wrapperRef}
+      style={{position: "absolute", top: "76px"}}
     >
       <div className={style.menuLeft} ref={menuLeftRef}>
         <ul className={style.menuList}>
+          <span>Navigation</span>
           {ITEMS.map((item, index) => {
             const href = item === "Index" ? "/" : `/${item.toLowerCase()}`;
             const isActive = pathname === href;
@@ -135,7 +141,6 @@ useEffect(() => {
               <li key={index} className={style.menuListItem} ref={(el) => (liRefs.current[index] = el)}>
                 <Link href={href} onClick={handleLinkClick}>
                   <div className={style.menuListItemContent} style={isActive ? { color: "var(--accent-300)" } : {}}>
-                    <span>0{index + 1}</span>
                     <div className={style.menuItemTextSlot}>
                       <span ref={(el) => (span0Refs.current[index] = el)}>{item}</span>
                       <span ref={(el) => (span1Refs.current[index] = el)} aria-hidden="true">{item}</span>

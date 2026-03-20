@@ -38,7 +38,7 @@ export default function Navbar({ data }) {
       duration: 0.5,
       ease: "power2.inOut",
     }).to(navbarRef.current, {
-      height: "auto",
+      maxHeight: "600px",
       duration: 0.5,
       ease: "power2.inOut",
     });
@@ -65,7 +65,7 @@ export default function Navbar({ data }) {
   return (
     <>
     <nav className={style.navbarContainer}>
-      <div className={style.navbar} ref={navbarRef} style={{height: "76px"}}>
+      <div className={style.navbar} ref={navbarRef} style={{maxHeight: "76px"}}>
         <MenuButton isOpen={isOpen} toggleMenu={toggleMenu} />
         <Logo label={data.logo} ref={logoRef} />
         <Btn

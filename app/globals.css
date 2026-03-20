@@ -68,6 +68,40 @@
   --accent-950: #1E3A0F;
 
   --ease-in-out: cubic-bezier(0.45, 0, 0.55, 1);
+
+  --size-unit: 16; /* body font-size in design - no px */
+  --size-container-ideal: 1440; /* screen-size in design - no px */
+  --size-container-min: 992px;
+  --size-container-max: 1920px;
+  --size-container: clamp(var(--size-container-min), 100vw, var(--size-container-max));
+  --size-font: calc(var(--size-container) / (var(--size-container-ideal) / var(--size-unit)));
+}
+
+/* Tablet */
+@media screen and (max-width: 991px) {
+  :root {
+    --size-container-ideal: 834; /* screen-size in design - no px */
+    --size-container-min: 768px;
+    --size-container-max: 991px;
+  }
+}
+
+/* Mobile Landscape */
+@media screen and (max-width: 767px) {
+  :root {
+    --size-container-ideal: 550; /* screen-size in design - no px */
+    --size-container-min: 480px;
+    --size-container-max: 767px;
+  }
+}
+
+/* Mobile Portrait */
+@media screen and (max-width: 479px) {
+  :root {
+    --size-container-ideal: 390; /* screen-size in design - no px */
+    --size-container-min: 320px;
+    --size-container-max: 479px;
+  }
 }
 
 @layer base {
@@ -84,6 +118,7 @@
     background-color: var(--primary-50);
     color: var(--primary-50);
     box-sizing: border-box;
+    font-size: var(--size-font);
   }
 
   body ::selection {
@@ -105,70 +140,14 @@
   }
 }
 
-
-:root {
-  --lightning-color: var(--accent-300);
+.container {
+  max-width: var(--size-container);
 }
 
-@keyframes text-fade-in {
-  0% {
-    color: inherit;
-    opacity: 0;
-  }
-  1% {
-    color: var(--lightning-color);
-    opacity: 1;
-  }
-  15% {
-    opacity: 0.2;
-  }
-  30% {
-    opacity: 0.8;
-  }
-  40% {
-    color: var(--lightning-color);
-    opacity: 1;
-  }
-  55% {
-    opacity: 1;
-  }
-  70% {
-    color: inherit;
-    opacity: 0.5;
-  }
-  85% {
-    opacity: 1;
-  }
-  to {
-    opacity: 1;
-  }
+.container.medium {
+  max-width: calc(var(--size-container) * 0.85);
 }
 
-@keyframes blink {
-  0% {
-    opacity: 1;
-  }
-  20% {
-    opacity: 0.3;
-  }
-  35% {
-    opacity: 0.85;
-  }
-  55% {
-    opacity: 0.2;
-  }
-  70% {
-    opacity: 1;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-.text-fade-char {
-  animation: text-fade-in 0.4s ease-out forwards;
-}
-
-.text-blink {
-  animation: blink 1s ease-out;
+.container.small {
+  max-width: calc(var(--size-container) * 0.7);
 }

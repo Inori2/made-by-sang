@@ -24,6 +24,7 @@
   min-width: 300px;
   align-items: center;
   overflow: hidden;
+  height: fit-content;
 }
 
 /*Mobile*/
