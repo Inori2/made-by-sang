@@ -55,10 +55,6 @@ export default function MenuWrapper({ isOpen, onLinkClick }) {
           each: 0.1,
           from: "center",
         },
-        onComplete: () => {
-          wrapperRef.current.style.position = "relative";
-          wrapperRef.current.style.top = "0";
-        }
       }, "<0.1"); // Start 0.1s after clipPath begins
   }, []);
 
@@ -87,8 +83,6 @@ useEffect(() => {
     if (!el || !span0Refs.current[i] || !span1Refs.current[i]) return;
 
     let tl;
-
-    // ✅ Use gsap.context() scoped to each li — same as Btn
     const ctx = gsap.context(() => {
       const split0 = new SplitText(span0Refs.current[i], { type: "chars" });
       const split1 = new SplitText(span1Refs.current[i], { type: "chars" });
@@ -103,7 +97,7 @@ useEffect(() => {
             yPercent: -100,
             duration: 0.5,
             ease: "power2.inOut",
-          }, Math.random() * 0.2); // ✅ same stagger approach as Btn
+          }, Math.random() * 0.2);
         }
       });
     }, el);
@@ -111,14 +105,14 @@ useEffect(() => {
     const onEnter = () => tl && tl.play();
     const onLeave = () => tl && tl.reverse();
 
-    // ✅ Attach to the li element, not Link
+  
     el.addEventListener("mouseenter", onEnter);
     el.addEventListener("mouseleave", onLeave);
 
     cleanups.push(() => {
       el.removeEventListener("mouseenter", onEnter);
       el.removeEventListener("mouseleave", onLeave);
-      ctx.revert(); // ✅ clean up like Btn does
+      ctx.revert();
     });
   });
 
@@ -129,7 +123,6 @@ useEffect(() => {
     <div
       className={style.menuWrapper}
       ref={wrapperRef}
-      style={{position: "absolute", top: "76px"}}
     >
       <div className={style.menuLeft} ref={menuLeftRef}>
         <ul className={style.menuList}>
