@@ -16,31 +16,26 @@ export default function Navbar({ data }) {
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
-    console.log(isOpen)
   };
 
-  useEffect(() => {
-    let ctx = gsap.context(() => {
-      gsap.from(navbarRef.current, {
-        yPercent: -150,
-        duration: 1,
-        ease: "power2.inOut",
-      });
-    }, navbarRef);
+useEffect(() => {
+  let ctx = gsap.context(() => {
+    gsap.fromTo(navbarRef.current,
+      { yPercent: -150 },
+      { yPercent: 0, duration: 1, ease: "power2.inOut" }
+    );
+  }, navbarRef);
 
-    tl.current = gsap.timeline({
-      paused: true,
-    });
-    
-    // Base CSS width is 960px. Timeline animates it up to 1240px.
-    tl.current.to(navbarRef.current, {
-      maxWidth: "1240px",
-      duration: 0.5,
-      ease: "power2.inOut",
-    });
+  tl.current = gsap.timeline({ paused: true });
 
-    return () => ctx.revert();
-  }, []);
+  tl.current
+    .fromTo(navbarRef.current,
+      { maxWidth: "960px" },
+      { maxWidth: "1240px", borderRadius: "8px", duration: 0.5, ease: "power2.inOut" }
+    );
+
+  return () => ctx.revert();
+}, []);
 
   const handleMenuLinkClick = () => {
     setIsOpen(true);
@@ -61,15 +56,16 @@ export default function Navbar({ data }) {
   return (
     <>
     <nav className={style.navbarContainer}>
-    <div className={style.navbar} ref={navbarRef}>
-      <MenuButton isOpen={isOpen} toggleMenu={toggleMenu} />
+      <div className={style.navbar} ref={navbarRef}>
+        <MenuButton isOpen={isOpen} toggleMenu={toggleMenu} />
         <Logo label={data.logo} ref={logoRef} />
-      <Btn
-        label="Let's work together"
-        ref={menuRef}
-      />
-    </div>
-    <MenuWrapper isOpen={isOpen} onLinkClick={handleMenuLinkClick} />
+        <Btn
+          label="Let's work together"
+          ref={menuRef}
+        />
+        <MenuWrapper isOpen={isOpen} onLinkClick={handleMenuLinkClick} />
+      </div>
+
     </nav>
     </>
   );
