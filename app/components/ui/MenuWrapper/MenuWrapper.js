@@ -81,19 +81,24 @@ export default function MenuWrapper({ isOpen, onLinkClick }) {
   }, [isOpen]);
 
   // Hover char stagger animation
-  useEffect(() => {
-    if (isOpen) return; // Only initialize when menu is open (isOpen = false)
+useEffect(() => {
+  if (isOpen) return;
 
-    gsap.registerPlugin(SplitText);
-    const cleanups = [];
+  gsap.registerPlugin(SplitText);
+  const cleanups = [];
 
-    liRefs.current.forEach((el, i) => {
-      if (!el || !span0Refs.current[i] || !span1Refs.current[i]) return;
+  liRefs.current.forEach((el, i) => {
+    if (!el || !span0Refs.current[i] || !span1Refs.current[i]) return;
 
+    let tl;
+
+    // ✅ Use gsap.context() scoped to each li — same as Btn
+    const ctx = gsap.context(() => {
       const split0 = new SplitText(span0Refs.current[i], { type: "chars" });
       const split1 = new SplitText(span1Refs.current[i], { type: "chars" });
 
-      const tl = gsap.timeline({ paused: true });
+      tl = gsap.timeline({ paused: true });
+
       split0.chars.forEach((char, ci) => {
         const char1 = split1.chars[ci];
         if (char && char1) {
@@ -101,27 +106,27 @@ export default function MenuWrapper({ isOpen, onLinkClick }) {
             yPercent: -100,
             duration: 0.5,
             ease: "power2.inOut",
-          }, Math.random() * 0.2);
+          }, Math.random() * 0.2); // ✅ same stagger approach as Btn
         }
       });
+    }, el);
 
-      const onEnter = () => tl.play();
-      const onLeave = () => tl.reverse();
+    const onEnter = () => tl && tl.play();
+    const onLeave = () => tl && tl.reverse();
 
-      el.addEventListener("mouseenter", onEnter);
-      el.addEventListener("mouseleave", onLeave);
+    // ✅ Attach to the li element, not Link
+    el.addEventListener("mouseenter", onEnter);
+    el.addEventListener("mouseleave", onLeave);
 
-      cleanups.push(() => {
-        el.removeEventListener("mouseenter", onEnter);
-        el.removeEventListener("mouseleave", onLeave);
-        tl.kill();
-        split0.revert();
-        split1.revert();
-      });
+    cleanups.push(() => {
+      el.removeEventListener("mouseenter", onEnter);
+      el.removeEventListener("mouseleave", onLeave);
+      ctx.revert(); // ✅ clean up like Btn does
     });
+  });
 
-    return () => cleanups.forEach((fn) => fn());
-  }, [isOpen]);
+  return () => cleanups.forEach((fn) => fn());
+}, [isOpen]);
 
   return (
     <div 
@@ -139,13 +144,13 @@ export default function MenuWrapper({ isOpen, onLinkClick }) {
             const href = item === "Index" ? "/" : `/${item.toLowerCase()}`;
             const isActive = pathname === href;
             return (
-              <li key={index} className={style.menuListItem}>
-                <Link href={href} onClick={handleLinkClick} ref={(el) => (liRefs.current[index] = el)}>
+              <li key={index} className={style.menuListItem} ref={(el) => (liRefs.current[index] = el)}>
+                <Link href={href} onClick={handleLinkClick}>
                   <div className={style.menuListItemContent} style={isActive ? { color: "var(--accent-300)" } : {}}>
                     <span>0{index + 1}</span>
                     <div className={style.menuItemTextSlot}>
                       <span ref={(el) => (span0Refs.current[index] = el)}>{item}</span>
-                      <span ref={(el) => (el) => (span1Refs.current[index] = el)} aria-hidden="true">{item}</span>
+                      <span ref={(el) => (span1Refs.current[index] = el)} aria-hidden="true">{item}</span>
                     </div>
                   </div>
                 </Link>

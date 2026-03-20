@@ -16,7 +16,6 @@ export default function Navbar({ data }) {
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
-    console.log(isOpen)
   };
 
   useEffect(() => {
