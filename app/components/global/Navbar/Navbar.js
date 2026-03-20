@@ -34,6 +34,11 @@ export default function Navbar({ data }) {
     // Base CSS width is 960px. Timeline animates it up to 1240px.
     tl.current.to(navbarRef.current, {
       maxWidth: "1240px",
+      borderRadius: "8px",
+      duration: 0.5,
+      ease: "power2.inOut",
+    }).to(navbarRef.current, {
+      height: "auto",
       duration: 0.5,
       ease: "power2.inOut",
     });
@@ -60,15 +65,16 @@ export default function Navbar({ data }) {
   return (
     <>
     <nav className={style.navbarContainer}>
-    <div className={style.navbar} ref={navbarRef}>
-      <MenuButton isOpen={isOpen} toggleMenu={toggleMenu} />
+      <div className={style.navbar} ref={navbarRef} style={{height: "76px"}}>
+        <MenuButton isOpen={isOpen} toggleMenu={toggleMenu} />
         <Logo label={data.logo} ref={logoRef} />
-      <Btn
-        label="Let's work together"
-        ref={menuRef}
-      />
-    </div>
-    <MenuWrapper isOpen={isOpen} onLinkClick={handleMenuLinkClick} />
+        <Btn
+          label="Let's work together"
+          ref={menuRef}
+        />
+        <MenuWrapper isOpen={isOpen} onLinkClick={handleMenuLinkClick} />
+      </div>
+
     </nav>
     </>
   );
