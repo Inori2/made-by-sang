@@ -28,7 +28,7 @@ useEffect(() => {
     );
     let mm = gsap.matchMedia();
 
-    mm.add("(min-width: 768px)", () => {
+    mm.add("(max-width: 1920px)", () => {
       gsap.set(navbarRef.current, {height: "64px"});
       tl.current = gsap.timeline({ paused: true });
       tl.current
