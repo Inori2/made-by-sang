@@ -11,6 +11,7 @@ export default function Navbar({ data }) {
   const logoRef = useRef(null);
   const menuRef = useRef(null);
   const navbarRef = useRef(null);
+  const menuWrapperRef = useRef(null);
   const [isOpen, setIsOpen] = useState(true);
   const tl = useRef(null);
 
@@ -29,13 +30,17 @@ useEffect(() => {
     let mm = gsap.matchMedia();
 
     mm.add("(max-width: 1920px)", () => {
-      gsap.set(navbarRef.current, {height: "64px"});
+      const navbarHeight = 64;
+      gsap.set(navbarRef.current, {height: `${navbarHeight}px`});
       tl.current = gsap.timeline({ paused: true });
       tl.current
         .fromTo(navbarRef.current,
           { maxWidth: "620px" },
         { maxWidth: "1240px", duration: 0.6, ease: "power2.inOut" }
-      ).fromTo(navbarRef.current, {height: "64px"}, {height: "550px", borderRadius: "8px", duration: 0.5, ease: "power2.inOut"});
+      ).fromTo(navbarRef.current, {height: `${navbarHeight}px`}, {height: () => menuWrapperRef.current.scrollHeight + navbarHeight, 
+        borderRadius: "8px", 
+        duration: 0.5, 
+        ease: "power2.inOut"});
     });
 
     mm.add("(max-width: 768px)", () => {
@@ -63,7 +68,7 @@ useEffect(() => {
         tl.current.reverse();
       } else {
         // Menu is open: play timeline forward (expand navbar)
-        tl.current.play();
+        tl.current.invalidate().play();
       }
     }
   }, [isOpen]);
@@ -81,7 +86,7 @@ useEffect(() => {
           label="Let's Go"
           ref={menuRef}
         /></div>
-        <MenuWrapper isOpen={isOpen} onLinkClick={handleMenuLinkClick} />
+        <MenuWrapper isOpen={isOpen} onLinkClick={handleMenuLinkClick} ref={menuWrapperRef} />
       </div>
 
     </nav>

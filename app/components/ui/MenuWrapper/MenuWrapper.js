@@ -12,7 +12,7 @@ const Spline = dynamic(() => import("@splinetool/react-spline"), { ssr: false })
 const scene = "/assets/scene-clean.splinecode";
 const ITEMS = ["Index", "Works", "About", "Archive"];
 
-export default function MenuWrapper({ isOpen, onLinkClick }) {
+export default function MenuWrapper({ isOpen, onLinkClick, ref }) {
   const pathname = usePathname();
   const [isDesktop, setIsDesktop] = useState(false);
   const wrapperRef = useRef(null);
@@ -142,7 +142,10 @@ useEffect(() => {
   return (
     <div
       className={style.menuWrapper}
-      ref={wrapperRef}
+      ref={(el) => {
+        wrapperRef.current = el;  // internal ref for animations
+        if (ref) ref.current = el; // external ref for Navbar's scrollHeight
+      }}
     >
       <div className={style.menuLeft} ref={menuLeftRef}>
         <ul className={style.menuList}>
