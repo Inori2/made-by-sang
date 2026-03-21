@@ -1,6 +1,6 @@
 .navbarContainer {
   display: flex;
-  width: calc(100% - 40px);
+  width: calc(100% - 20px);
   gap: 0;
   flex-direction: column;
   position: fixed;
@@ -9,6 +9,7 @@
   transform: translateX(-50%);
   justify-content: center;
   align-items: center;
+  z-index: 10;
 }
 
 .navbar {
@@ -19,6 +20,17 @@
   justify-content: center;
   overflow: hidden;
   visibility: hidden;
+  gap: 0.385rem;
+}
+
+.navbarOverlay {
+  position: fixed;
+  inset: 0;
+  background-color: var(--primary-950);
+  pointer-events: none;
+  z-index: -2;
+  opacity: 0.3;
+  backdrop-filter: blur(10px);
 }
 
 .navbarTop {
@@ -42,11 +54,12 @@
 /*Mobile*/
 @media screen and (max-width: 768px) {
   .navbarTop {
-    width: calc(100% - 30px);
+    width: calc(100% - 20px);
     grid-template-columns: 1fr 1fr;
     padding: 0.5rem;
   }
-  .navbar {
-    padding: 0;
+  .navbarContainer {
+    width: calc(100% - 20px);
+    top: 10px;
   }
 }

@@ -61,12 +61,6 @@ export default function MenuWrapper({ isOpen, onLinkClick, ref }) {
           each: 0.1,
           from: "center",
         },
-        onComplete: function() {
-          this.targets().forEach(el => {
-            el.style.removeProperty("position");
-            el.style.removeProperty("top");
-          });
-        }
       }, "<0.1"); // Start 0.1s after clipPath begins
   }, []);
 
@@ -149,7 +143,7 @@ useEffect(() => {
     >
       <div className={style.menuLeft} ref={menuLeftRef}>
         <ul className={style.menuList}>
-          <span>Navigation</span>
+          <span className={style.menuListTitle}>Navigation</span>
           {ITEMS.map((item, index) => {
             const href = item === "Index" ? "/" : `/${item.toLowerCase()}`;
             const isActive = pathname === href;
@@ -167,6 +161,9 @@ useEffect(() => {
             );
           })}
         </ul>
+        <div className={style.menuLeftBottom}>
+          
+        </div>
       </div>
       <div className={style.menuCenter} ref={menuCenterRef}>
         
