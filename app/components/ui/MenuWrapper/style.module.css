@@ -7,6 +7,12 @@
   padding-top: clamp(1rem, 2vw, 1.25rem);
   gap: 1rem;
   overflow: hidden;
+  position: absolute;
+  top: 64px;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-bottom: 15px;
+  visibility: hidden;
 }
 
 .menuLeft {
@@ -82,12 +88,15 @@
 @media screen and (max-width: 768px) {
   .menuWrapper {
     grid-template-columns: 1fr;
-    width: calc(100% - 30px);
+    padding: 15px;
   }
   .menuRight {
     display: none;
   }
   .splineCanvas {
+    display: none;
+  }
+  .menuCenter {
     display: none;
   }
 }

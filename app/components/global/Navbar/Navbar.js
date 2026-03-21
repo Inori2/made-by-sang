@@ -20,19 +20,34 @@ export default function Navbar({ data }) {
 
 useEffect(() => {
   let ctx = gsap.context(() => {
+    // Set initial visibility and start position
+    gsap.set(navbarRef.current, { visibility: "visible" });
     gsap.fromTo(navbarRef.current,
       { yPercent: -150 },
       { yPercent: 0, duration: 1, ease: "power2.inOut" }
     );
+    let mm = gsap.matchMedia();
+
+    mm.add("(min-width: 768px)", () => {
+      gsap.set(navbarRef.current, {height: "64px"});
+      tl.current = gsap.timeline({ paused: true });
+      tl.current
+        .fromTo(navbarRef.current,
+          { maxWidth: "620px" },
+        { maxWidth: "1240px", duration: 0.6, ease: "power2.inOut" }
+      ).fromTo(navbarRef.current, {height: "64px"}, {height: "550px", borderRadius: "8px", duration: 0.5, ease: "power2.inOut"});
+    });
+
+    mm.add("(max-width: 768px)", () => {
+      gsap.set(navbarRef.current, {height: "58px"});
+      tl.current = gsap.timeline({ paused: true });
+      tl.current
+        .fromTo(navbarRef.current,
+          { maxWidth: "620px" },
+        { maxWidth: "1240px", duration: 0.6, ease: "power2.inOut" }
+      ).fromTo(navbarRef.current, {height: "58px"}, {height: "calc(100dvh - 40px)", borderRadius: "8px", duration: 0.5, ease: "power2.inOut"});
+    });
   }, navbarRef);
-
-  tl.current = gsap.timeline({ paused: true });
-
-  tl.current
-    .fromTo(navbarRef.current,
-      { maxWidth: "960px" },
-      { maxWidth: "1240px", borderRadius: "8px", duration: 0.5, ease: "power2.inOut" }
-    );
 
   return () => ctx.revert();
 }, []);
@@ -56,13 +71,16 @@ useEffect(() => {
   return (
     <>
     <nav className={style.navbarContainer}>
+      <div className={style.navbarOverlay}></div>
       <div className={style.navbar} ref={navbarRef}>
+        <div className={style.navbarBack}></div>
+        <div className={style.navbarTop}>
         <MenuButton isOpen={isOpen} toggleMenu={toggleMenu} />
         <Logo label={data.logo} ref={logoRef} />
         <Btn
-          label="Let's work together"
+          label="Let's Go"
           ref={menuRef}
-        />
+        /></div>
         <MenuWrapper isOpen={isOpen} onLinkClick={handleMenuLinkClick} />
       </div>
 

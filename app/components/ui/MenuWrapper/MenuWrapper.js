@@ -45,8 +45,14 @@ export default function MenuWrapper({ isOpen, onLinkClick }) {
     gsap.set([menuLeftRef.current, menuCenterRef.current, menuRightRef.current], {
       y: 50,
     });
+    gsap.set(wrapperRef.current, { opacity: 0, visibility: "hidden" });
 
     tlReveal.current = gsap.timeline({ paused: true })
+      .set(wrapperRef.current, { visibility: "visible" })
+      .to(wrapperRef.current, {
+        opacity: 1,
+        duration: 0.01,
+      })
       .to([menuLeftRef.current, menuCenterRef.current, menuRightRef.current], {
         y: 0,
         duration: 0.5,
@@ -55,6 +61,12 @@ export default function MenuWrapper({ isOpen, onLinkClick }) {
           each: 0.1,
           from: "center",
         },
+        onComplete: function() {
+          this.targets().forEach(el => {
+            el.style.removeProperty("position");
+            el.style.removeProperty("top");
+          });
+        }
       }, "<0.1"); // Start 0.1s after clipPath begins
   }, []);
 
@@ -67,7 +79,15 @@ export default function MenuWrapper({ isOpen, onLinkClick }) {
       // Opening: wait for navbar width expansion (0.5s) to complete, then play
       delayedCallRef.current = gsap.delayedCall(0.5, () => tlReveal.current.play());
     } else {
-      // Closing: reverse immediately (navbar collapses, menu hides first)
+      // Closing: reverse the menu items animation, then hide wrapper
+      gsap.to(wrapperRef.current, {
+        opacity: 0,
+        duration: 0.2,
+        ease: "power2.in",
+        onComplete: () => {
+          wrapperRef.current.style.visibility = "hidden";
+        }
+      });
       tlReveal.current.reverse();
     }
   }, [isOpen]);
