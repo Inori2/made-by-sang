@@ -2,14 +2,6 @@
 @import "tailwindcss";
 
 @font-face {
-  font-family: "CommitMono";
-  src: url("/fonts/CommitMonoVariable.woff2") format("woff2");
-  font-weight: 100 900;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
   font-family: "Saans";
   src: url("/fonts/Saans/Saans-TRIAL-Regular.woff2") format("woff2");
   font-weight: 400;
@@ -114,18 +106,6 @@
     font-weight: inherit;
   }
 
-  body {
-    background-color: var(--primary-50);
-    color: var(--primary-50);
-    box-sizing: border-box;
-    font-size: var(--size-font);
-  }
-
-  body ::selection {
-    background-color: var(--accent-300);
-    color: var(--primary-950);
-  }
-
   html {
     font-family: "Saans", sans-serif;
   }
@@ -139,6 +119,18 @@
     list-style: none;
   }
 }
+
+body {
+    background-color: var(--primary-950);
+    color: var(--primary-50);
+    box-sizing: border-box;
+    font-size: var(--size-font);
+  }
+
+  body ::selection {
+    background-color: var(--accent-300);
+    color: var(--primary-950);
+  }
 
 .container {
   max-width: var(--size-container);

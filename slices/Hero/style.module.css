@@ -1,0 +1,75 @@
+.hero {
+  width: 100%;
+  min-height: 100dvh;
+  padding-top: clamp(2.5rem, 5vw, 5rem);
+  padding-bottom: clamp(2.5rem, 5vw, 5rem);
+  padding-left: clamp(1.25rem, 2vw, 2rem);
+  padding-right: clamp(1.25rem, 2vw, 2rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+  height: 100dvh;
+}
+
+.hero h1 {
+  font-size: clamp(7.5rem, 10vw, 10rem);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+}
+
+.hero p {
+  font-size: clamp(0.75rem, 1vw, 1rem);
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--primary-400)
+}
+
+.top {
+  width: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+.top h1 {
+  grid-column: span 2;
+}
+
+.top p {
+  grid-column: 4;
+
+}
+
+.center {
+  width: 25%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: clamp(0.5rem, 1vw, 1rem);
+  background-color: var(--primary-950);
+  border: 1px solid var(--primary-800);
+}
+
+.bottom {
+  width: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+.bottom h1 {
+  grid-column: span 3;
+  text-align: right;
+}
+
+.bottom p {
+  grid-column: 1;
+}

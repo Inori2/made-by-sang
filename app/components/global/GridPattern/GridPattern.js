@@ -5,7 +5,7 @@ export default function GridPattern({
 }) {
   return (
     <div
-      className={`${position} inset-0 grid grid-cols-4 px-5 pointer-events-none ${className ?? ""}`}
+      className={`${position} inset-0 grid grid-cols-4 px-5 pointer-events-none ${className ?? ""} z-1`}
     >
       {Array.from({ length: amount }).map((_, i) => (
         <div

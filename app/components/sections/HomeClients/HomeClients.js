@@ -11,10 +11,6 @@ export default function HomeClients({ slices }) {
 
   return (
     <>
-      {/* {isLoading && <Preloader onComplete={() => setIsLoading(false)} />} */}
-
-      {/* your slices only show when loading is done */}
-      {/* {!isLoading && <SliceZone slices={slices} components={components} />} */}
       <SliceZone slices={slices} components={components} />
     </>
   );

@@ -15,6 +15,7 @@ export default function Navbar({ data }) {
   const menuWrapperRef = useRef(null);
   const [isOpen, setIsOpen] = useState(true);
   const tl = useRef(null);
+  const isOpenRef = useRef(isOpen)
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -29,6 +30,38 @@ useEffect(() => {
       { yPercent: -150 },
       { yPercent: 0, duration: 1, ease: "power2.inOut" }
     );
+
+    const desktopBreakpoint = 1023;
+    const mobileBreakpoint = 748;
+    let maxWidth = "";
+
+    function checkWidth() {
+      if (window.innerWidth > desktopBreakpoint) {
+        maxWidth = "calc(50% - 1rem)";
+      } 
+      else if (window.innerWidth < mobileBreakpoint) {
+        maxWidth = "calc(100% - 2rem)";
+      }
+      else {
+        maxWidth = "100%";
+      }
+      if (isOpen) {
+        gsap.set(navbarRef.current, {
+          maxWidth: maxWidth
+        })
+      }
+    }
+    
+    function handleScroll() {
+      if (!isOpenRef.current) {
+        setIsOpen(true); // triggers the existing useEffect to reverse tl
+       }
+    }
+
+    checkWidth();
+    window.addEventListener("resize", checkWidth);
+    window.addEventListener("scroll", handleScroll);
+
     let mm = gsap.matchMedia();
 
     mm.add("(max-width: 1920px)", () => {
@@ -37,14 +70,19 @@ useEffect(() => {
       tl.current = gsap.timeline({ paused: true });
       tl.current
         .fromTo(navbarRef.current,
-          { maxWidth: "620px" },
+          { maxWidth: maxWidth },
         { maxWidth: "100%", duration: 0.6, ease: "power2.inOut" }
       ).fromTo(navbarRef.current, {height: `${navbarHeight}px`}, {height: () => menuWrapperRef.current.scrollHeight + navbarHeight - 20, 
         borderRadius: "8px", 
         duration: 0.5, 
         ease: "power2.inOut"})
-        .fromTo(overlayRef.current, {opacity: 0}, {opacity: 0.3, duration: 0.5, ease: "power2.inOut"}, "<");
+        .fromTo(overlayRef.current, {opacity: 0}, {opacity: 1, duration: 0.5, ease: "power2.inOut"}, "<");
     });
+
+    return () => {
+      window.removeEventListener("resize", checkWidth);
+      window.removeEventListener("scroll", handleScroll);
+    }
   }, navbarRef);
 
   return () => ctx.revert();
@@ -65,6 +103,11 @@ useEffect(() => {
       }
     }
   }, [isOpen]);
+
+
+  useEffect(() => {
+  isOpenRef.current = isOpen;
+}, [isOpen]);
 
   return (
     <>
