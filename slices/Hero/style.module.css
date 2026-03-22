@@ -46,6 +46,14 @@
 }
 
 .center {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.video {
   width: 25%;
   display: flex;
   flex-direction: column;

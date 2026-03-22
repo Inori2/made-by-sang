@@ -39,6 +39,8 @@
   position: relative;
   width: 100%;
   align-items: center;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--primary-900);
 }
 
 .navbarBack {

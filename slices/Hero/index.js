@@ -22,12 +22,14 @@ const Hero = ({ slice }) => {
         <PrismicRichText field={slice.primary.paragraph_1} />
       </div>
       <div className={style.center}>
+        <div className={style.video}>
         <video
         src={slice.primary.video.url}
         autoPlay
         muted
         loop
         ></video>
+        </div>
       </div>
       <div className={style.bottom}>
         <PrismicRichText field={slice.primary.paragraph_2} />
