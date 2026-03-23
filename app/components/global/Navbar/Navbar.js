@@ -15,98 +15,127 @@ export default function Navbar({ data }) {
   const menuWrapperRef = useRef(null);
   const [isOpen, setIsOpen] = useState(true);
   const tl = useRef(null);
-  const isOpenRef = useRef(isOpen)
+  const isOpenRef = useRef(isOpen);
 
   const toggleMenu = () => {
-    setIsOpen(!isOpen);
+    setIsOpen((current) => !current);
   };
 
-useEffect(() => {
-  let ctx = gsap.context(() => {
-    // Set initial visibility and start position
-    gsap.set(navbarRef.current, { visibility: "visible" });
-    gsap.set(overlayRef.current, { opacity: 0 });
-    gsap.fromTo(navbarRef.current,
-      { yPercent: -150 },
-      { yPercent: 0, duration: 1, ease: "power2.inOut" }
-    );
-
+  useEffect(() => {
     const desktopBreakpoint = 1023;
     const mobileBreakpoint = 748;
-    let maxWidth = "";
+    const navbarHeight = 64;
+    const collapsedBorderRadius = "4px";
 
-    function checkWidth() {
-      if (window.innerWidth > desktopBreakpoint) {
-        maxWidth = "calc(50% - 1rem)";
-      } else if (window.innerWidth < mobileBreakpoint) {
-        maxWidth = "100%";
-      } else {
-        maxWidth = "100%";
+    let ctx = gsap.context(() => {
+      const getCollapsedMaxWidth = () => {
+        if (window.innerWidth > desktopBreakpoint) {
+          return "calc(50% - 1rem)";
+        }
+
+        if (window.innerWidth < mobileBreakpoint) {
+          return "100%";
+        }
+
+        return "100%";
+      };
+
+      const applyCollapsedState = () => {
+        gsap.set(navbarRef.current, {
+          maxWidth: getCollapsedMaxWidth(),
+          height: `${navbarHeight}px`,
+          borderRadius: collapsedBorderRadius,
+        });
+      };
+
+      // Set initial visibility and start position
+      gsap.set(navbarRef.current, { visibility: "visible" });
+      gsap.set(overlayRef.current, { opacity: 0 });
+      gsap.fromTo(
+        navbarRef.current,
+        { yPercent: -150 },
+        { yPercent: 0, duration: 1, ease: "power2.inOut" }
+      );
+
+      applyCollapsedState();
+
+      function checkWidth() {
+        if (isOpenRef.current) {
+          applyCollapsedState();
+        }
       }
 
-      if (isOpenRef.current) {
-        gsap.set(navbarRef.current, { clearProps: "maxWidth,width" });
+      function handleScroll() {
+        if (!isOpenRef.current) {
+          setIsOpen(true);
+        }
       }
-    }
-    
-    function handleScroll() {
-      if (!isOpenRef.current) {
-        setIsOpen(true); // triggers the existing useEffect to reverse tl
-       }
-    }
 
-    checkWidth();
-    window.addEventListener("resize", checkWidth);
-    window.addEventListener("scroll", handleScroll);
+      window.addEventListener("resize", checkWidth);
+      window.addEventListener("scroll", handleScroll);
 
-    let mm = gsap.matchMedia();
+      let mm = gsap.matchMedia();
 
-    mm.add("(max-width: 1920px)", () => {
-      const navbarHeight = 64;
-      gsap.set(navbarRef.current, {height: `${navbarHeight}px`});
-      tl.current = gsap.timeline({ paused: true , onReverseComplete: () => {
-        gsap.set(navbarRef.current, { clearProps: "maxWidth,height,borderRadius" });
-      }});
-      tl.current
-        .fromTo(navbarRef.current,
-          { maxWidth: maxWidth },
-        { maxWidth: "100%", duration: 0.6, ease: "power2.inOut" }
-      ).fromTo(navbarRef.current, {height: `${navbarHeight}px`}, {height: () => menuWrapperRef.current.scrollHeight + navbarHeight - 75, 
-        borderRadius: "8px", 
-        duration: 0.5, 
-        ease: "power2.inOut"})
-        .fromTo(overlayRef.current, {opacity: 0}, {opacity: 1, duration: 0.5, ease: "power2.inOut"}, "<");
-    });
+      mm.add("(max-width: 1920px)", () => {
+        tl.current = gsap.timeline({
+          paused: true,
+          onReverseComplete: applyCollapsedState,
+        });
 
-    return () => {
-      window.removeEventListener("resize", checkWidth);
-      window.removeEventListener("scroll", handleScroll);
-    }
-  }, navbarRef);
+        tl.current
+          .fromTo(
+            navbarRef.current,
+            { maxWidth: getCollapsedMaxWidth },
+            { maxWidth: "100%", duration: 0.6, ease: "power2.inOut" }
+          )
+          .fromTo(
+            navbarRef.current,
+            {
+              height: `${navbarHeight}px`,
+              borderRadius: collapsedBorderRadius,
+            },
+            {
+              height: () => menuWrapperRef.current.scrollHeight + navbarHeight - 75,
+              borderRadius: "8px",
+              duration: 0.5,
+              ease: "power2.inOut",
+            }
+          )
+          .fromTo(
+            overlayRef.current,
+            { opacity: 0 },
+            { opacity: 1, duration: 0.5, ease: "power2.inOut" },
+            "<"
+          );
+      });
 
-  return () => ctx.revert();
-}, []);
+      return () => {
+        window.removeEventListener("resize", checkWidth);
+        window.removeEventListener("scroll", handleScroll);
+        mm.revert();
+      };
+    }, navbarRef);
+
+    return () => ctx.revert();
+  }, []);
 
   const handleMenuLinkClick = () => {
     setIsOpen(true);
   };
 
   useEffect(() => {
+    isOpenRef.current = isOpen;
+
     if (tl.current) {
       if (isOpen) {
         // Menu is closed: reverse timeline (collapse navbar)
         tl.current.reverse();
       } else {
         // Menu is open: play timeline forward (expand navbar)
-        tl.current.invalidate().play();
+        tl.current.invalidate().restart();
       }
     }
   }, [isOpen]);
-
-
-  useEffect(() => {
-  isOpenRef.current = isOpen;
-}, [isOpen]);
 
   return (
     <>
