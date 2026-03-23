@@ -39,7 +39,7 @@ useEffect(() => {
       if (window.innerWidth > desktopBreakpoint) {
         maxWidth = "calc(50% - 1rem)";
       } else if (window.innerWidth < mobileBreakpoint) {
-        maxWidth = "calc(100% - 2rem)";
+        maxWidth = "100%";
       } else {
         maxWidth = "100%";
       }

@@ -104,6 +104,26 @@
   display: block;
 }
 
+/*Tablet*/
+@media screen and (max-width: 1024px) {
+  .menuWrapper {
+    grid-template-columns: 1.4fr 0.6fr;
+  }
+    .menuItemTextSlot {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    font-size: clamp(2rem, 18vw, 4rem);
+    font-weight: 500;
+    height: 1em;
+    line-height: 1;
+  }
+
+  .menuRight {
+
+  }
+}
+
 /*Mobile*/
 @media screen and (max-width: 768px) {
   .menuWrapper {
@@ -128,5 +148,9 @@
     font-weight: 500;
     height: 1em;
     line-height: 1;
+  }
+
+  .contactContainer {
+    padding-bottom: 3rem;
   }
 }
