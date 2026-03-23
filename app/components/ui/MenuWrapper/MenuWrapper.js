@@ -5,15 +5,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useRef, useEffect, useState } from "react";
 import gsap from "gsap";
-import { SplitText } from "gsap/SplitText";
 import SocialBtn from "../SocialBtn/SocialBtn";
-import { RiBehanceFill } from "@remixicon/react"
+import { RiBehanceFill, RiInstagramFill, RiLinkedinFill } from "@remixicon/react"
+import Status from "../Status/Status";
 
 const Spline = dynamic(() => import("@splinetool/react-spline"), { ssr: false });
 
-const scene = "/assets/scene-clean.splinecode";
+const scene = "/scene/badge.splinecode";
 const ITEMS = ["Index", "Works", "About", "Archive"];
-const CENTER_ITEMS = ["Resume", "Youtube"];
 
 export default function MenuWrapper({ isOpen, onLinkClick, ref }) {
   const pathname = usePathname();
@@ -27,6 +26,7 @@ export default function MenuWrapper({ isOpen, onLinkClick, ref }) {
   const span0Refs = useRef([]);
   const span1Refs = useRef([]);
   const liRefs = useRef([]);
+  const contentRefs = useRef([]);
 
   const handleLinkClick = () => {
     onLinkClick?.();
@@ -48,6 +48,7 @@ export default function MenuWrapper({ isOpen, onLinkClick, ref }) {
     gsap.set([menuLeftRef.current, menuCenterRef.current, menuRightRef.current], {
       y: 50,
     });
+    gsap.set(contentRefs.current, { yPercent: 100 });
     gsap.set(wrapperRef.current, { opacity: 0, visibility: "hidden" });
 
     tlReveal.current = gsap.timeline({ paused: true })
@@ -64,7 +65,12 @@ export default function MenuWrapper({ isOpen, onLinkClick, ref }) {
           each: 0.1,
           from: "center",
         },
-      }, "<0.1"); // Start 0.1s after clipPath begins
+      }, "<0.1").to(contentRefs.current, {
+        yPercent: 0,
+        duration: 0.5,
+        ease: "power2.out",
+        stagger: 0.05,
+      }, "<0.1");
   }, []);
 
   useEffect(() => {
@@ -89,47 +95,32 @@ export default function MenuWrapper({ isOpen, onLinkClick, ref }) {
     }
   }, [isOpen]);
 
-  // Hover char stagger animation
 useEffect(() => {
   if (isOpen) return;
 
-  gsap.registerPlugin(SplitText);
   const cleanups = [];
 
   liRefs.current.forEach((el, i) => {
-    if (!el || !span0Refs.current[i] || !span1Refs.current[i]) return;
+    if (!el || !span0Refs.current[i]) return;
 
-    let tl;
-    const ctx = gsap.context(() => {
-      const split0 = new SplitText(span0Refs.current[i], { type: "chars" });
-      const split1 = new SplitText(span1Refs.current[i], { type: "chars" });
+    const tl = gsap.timeline({ paused: true });
 
-      tl = gsap.timeline({ paused: true });
+    tl.to(span0Refs.current[i], {
+      color: "var(--accent-300)",
+      duration: 0.4,
+      ease: "power2.inOut",
+    });
 
-      split0.chars.forEach((char, ci) => {
-        const char1 = split1.chars[ci];
-        if (char && char1) {
-          tl.to([char, char1], {
-            color: "var(--accent-300)",
-            yPercent: -100,
-            duration: 0.5,
-            ease: "power2.inOut",
-          }, Math.random() * 0.2);
-        }
-      });
-    }, el);
+    const onEnter = () => tl.play();
+    const onLeave = () => tl.reverse();
 
-    const onEnter = () => tl && tl.play();
-    const onLeave = () => tl && tl.reverse();
-
-  
     el.addEventListener("mouseenter", onEnter);
     el.addEventListener("mouseleave", onLeave);
 
     cleanups.push(() => {
       el.removeEventListener("mouseenter", onEnter);
       el.removeEventListener("mouseleave", onLeave);
-      ctx.revert();
+      tl.kill();
     });
   });
 
@@ -145,50 +136,48 @@ useEffect(() => {
       }}
     >
       <div className={style.menuLeft} ref={menuLeftRef}>
-        <ul className={style.menuList}>
+        <div className={style.menuContainer}>
           <span className={style.menuListTitle}>Navigation</span>
-          {ITEMS.map((item, index) => {
-            const href = item === "Index" ? "/" : `/${item.toLowerCase()}`;
-            const isActive = pathname === href;
-            return (
-              <li key={index} className={style.menuListItem} ref={(el) => (liRefs.current[index] = el)}>
-                <Link href={href} onClick={handleLinkClick}>
-                  <div className={style.menuListItemContent} style={isActive ? { color: "var(--accent-300)" } : {}}>
-                    <div className={style.menuItemTextSlot}>
-                      <span ref={(el) => (span0Refs.current[index] = el)}>{item}</span>
-                      <span ref={(el) => (span1Refs.current[index] = el)} aria-hidden="true">{item}</span>
+          <ul>
+            {ITEMS.map((item, index) => {
+              const href = item === "Index" ? "/" : `/${item.toLowerCase()}`;
+              const isActive = pathname === href;
+              return (
+                <li key={index} className={style.menuListItem} ref={(el) => (liRefs.current[index] = el)}>
+                  <Link href={href} onClick={handleLinkClick}>
+                    <div className={style.menuListItemContent} ref={(el) => (contentRefs.current[index] = el)} style={isActive ? { color: "var(--accent-300)" } : {}}>
+                      <div className={style.menuItemTextSlot}>
+                        <span ref={(el) => (span0Refs.current[index] = el)}>{item}</span>
+                        <span ref={(el) => (span1Refs.current[index] = el)} aria-hidden="true">{item}</span>
+                      </div>
                     </div>
-                  </div>
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
-        <div className={style.menuLeftBottom}>
-          <SocialBtn Icon={RiBehanceFill} href="" />
-          
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
         </div>
-      </div>
-      <div className={style.menuCenter} ref={menuCenterRef}>
-        <ul className={style.menuList}>
-          <span className={style.menuListTitle}>Socials</span>
-          {CENTER_ITEMS.map((item, index) => {
-            const href = item === "Index" ? "/" : `/${item.toLowerCase()}`;
-            const isActive = pathname === href;
-            return (
-              <li key={index} className={style.menuListItem} ref={(el) => (liRefs.current[index] = el)}>
-                <Link href={href} onClick={handleLinkClick}>
-                  <div className={style.menuListItemContent} style={isActive ? { color: "var(--accent-300)" } : {}}>
-                    <div className={style.menuItemTextSlot}>
-                      <span ref={(el) => (span0Refs.current[index] = el)}>{item}</span>
-                      <span ref={(el) => (span1Refs.current[index] = el)} aria-hidden="true">{item}</span>
-                    </div>
-                  </div>
-                </Link>
+        <div className={style.contactContainer}>
+          <div>
+            <span className={style.menuListTitle}>Contact</span>
+            <ul>
+              <li>
+                <Link href="mailto:trannhatsang2000@gmail.com">trannhatsang2000@gmail.com</Link>
               </li>
-            );
-          })}
-        </ul>
+            </ul>
+          </div>
+          <div className={style.menuSocialContainer}>
+            <span className={style.menuListTitle}>Follow Me</span>
+            <div className={style.menuSocialList}>
+              <SocialBtn Icon={RiBehanceFill} href="" />
+              <SocialBtn Icon={RiLinkedinFill} href="" />
+              <SocialBtn Icon={RiInstagramFill} href="" />
+            </div>
+          </div>
+          <div className={style.statusContainer}>
+            <Status />
+          </div>
+        </div>
       </div>
       <div className={style.menuRight} ref={menuRightRef}>
         {isDesktop && <Spline scene={scene} className={style.splineCanvas} />}

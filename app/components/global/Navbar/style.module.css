@@ -39,8 +39,6 @@
   position: relative;
   width: 100%;
   align-items: center;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid var(--primary-900);
 }
 
 .navbarBack {
@@ -55,12 +53,12 @@
 /*Mobile*/
 @media screen and (max-width: 768px) {
   .navbarTop {
-    width: calc(100% - 20px);
+    width: calc(100% - 30px);
     grid-template-columns: 1fr 1fr;
     padding: 0.5rem;
   }
   .navbarContainer {
-    width: calc(100% - 20px);
-    top: 10px;
+    width: calc(100% - 30px);
+    top: 20px;
   }
 }

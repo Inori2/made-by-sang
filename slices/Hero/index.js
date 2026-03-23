@@ -17,11 +17,7 @@ const Hero = ({ slice }) => {
       data-slice-variation={slice.variation}
       className={style.hero}
     >
-      <div className={style.top}>
-        <h1>{slice.primary.heading_1}</h1>
-        <PrismicRichText field={slice.primary.paragraph_1} />
-      </div>
-      <div className={style.center}>
+      <div className={style.videoContainer}>
         <div className={style.video}>
         <video
         src={slice.primary.video.url}
@@ -31,9 +27,15 @@ const Hero = ({ slice }) => {
         ></video>
         </div>
       </div>
-      <div className={style.bottom}>
-        <PrismicRichText field={slice.primary.paragraph_2} />
-        <h1>{slice.primary.heading_2}</h1>
+      <div className={style.contentContainer}>
+        <div className={style.top}>
+          <h1>{slice.primary.heading_1}</h1>
+          <PrismicRichText field={slice.primary.paragraph_1} />
+        </div>
+        <div className={style.bottom}>
+          <PrismicRichText field={slice.primary.paragraph_2} />
+          <h1>{slice.primary.heading_2}</h1>
+        </div>
       </div>
     </section>
     <GridPattern />

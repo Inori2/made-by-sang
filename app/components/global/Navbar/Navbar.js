@@ -38,17 +38,14 @@ useEffect(() => {
     function checkWidth() {
       if (window.innerWidth > desktopBreakpoint) {
         maxWidth = "calc(50% - 1rem)";
-      } 
-      else if (window.innerWidth < mobileBreakpoint) {
+      } else if (window.innerWidth < mobileBreakpoint) {
         maxWidth = "calc(100% - 2rem)";
-      }
-      else {
+      } else {
         maxWidth = "100%";
       }
-      if (isOpen) {
-        gsap.set(navbarRef.current, {
-          maxWidth: maxWidth
-        })
+
+      if (isOpenRef.current) {
+        gsap.set(navbarRef.current, { clearProps: "maxWidth,width" });
       }
     }
     
@@ -67,12 +64,14 @@ useEffect(() => {
     mm.add("(max-width: 1920px)", () => {
       const navbarHeight = 64;
       gsap.set(navbarRef.current, {height: `${navbarHeight}px`});
-      tl.current = gsap.timeline({ paused: true });
+      tl.current = gsap.timeline({ paused: true , onReverseComplete: () => {
+        gsap.set(navbarRef.current, { clearProps: "maxWidth,height,borderRadius" });
+      }});
       tl.current
         .fromTo(navbarRef.current,
           { maxWidth: maxWidth },
         { maxWidth: "100%", duration: 0.6, ease: "power2.inOut" }
-      ).fromTo(navbarRef.current, {height: `${navbarHeight}px`}, {height: () => menuWrapperRef.current.scrollHeight + navbarHeight - 20, 
+      ).fromTo(navbarRef.current, {height: `${navbarHeight}px`}, {height: () => menuWrapperRef.current.scrollHeight + navbarHeight - 75, 
         borderRadius: "8px", 
         duration: 0.5, 
         ease: "power2.inOut"})

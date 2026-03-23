@@ -1,40 +1,30 @@
 .socialBtn {
     position: relative;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
+    width: 2.5rem;
+    height: 2.5rem;
     border-radius: 50%;
-    background-color: var(--color-white);
-    color: var(--color-black);
-    cursor: pointer;
-    transition: all 0.3s ease;
+    background-color: var(--primary-50);
+    color: var(--primary-950);
+    overflow: hidden;
+    padding: 0.25rem;
 }
 
-.socialBtnIcon {
-    position: absolute;
+.socialBtnWrapper {
+    position: relative;
     width: 100%;
     height: 100%;
     display: flex;
+    flex-direction: row;
+    overflow: hidden;
+}
+
+.socialBtnIcon {
+    width: 100%;
+    display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s ease;
-}
-
-.socialBtnIcon:nth-child(1) {
-    transform: translateY(0);
-}
-
-.socialBtnIcon:nth-child(2) {
-    transform: translateY(100%);
-}
-
-.socialBtn:hover .socialBtnIcon:nth-child(1) {
-    transform: translateY(-100%);
-}
-
-.socialBtn:hover .socialBtnIcon:nth-child(2) {
-    transform: translateY(0);
 }
