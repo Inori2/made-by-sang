@@ -1,5 +1,5 @@
 .about {
-  --about-heading-size: calc(var(--text-heading-h5-size) * 1.15);
+  --about-heading-size: calc(var(--text-heading-h6-size) * 1.5);
   --about-copy-size: var(--text-paragraph-body-size);
   padding: 6rem 1.25rem;
   min-height: 100vh;
@@ -16,7 +16,7 @@
   grid-template-columns: auto 1fr;
   align-items: start;
   gap: 4rem;
-  max-width: 960px;
+  max-width: 940px;
 }
 
 .contentContainer span {
@@ -29,4 +29,5 @@
   font-size: var(--about-heading-size);
   font-weight: var(--font-weight-semibold);
   letter-spacing: var(--text-heading-h5-letter-spacing);
+  line-height: var(--text-heading-h5-line-height);
 }
