@@ -17,8 +17,10 @@ const TextHighlight = ({ slice }) => {
         data-slice-variation={slice.variation}
         className={styles.about}
       >
-        <span className="text-highlight">{slice.primary.heading}</span>
-        <PrismicRichText field={slice.primary.description} />
+        <div className={styles.contentContainer}>
+          <span className="text-highlight">{slice.primary.heading}</span>
+          <PrismicRichText field={slice.primary.description} />
+        </div>
         <GridPattern />
       </section>
     </>

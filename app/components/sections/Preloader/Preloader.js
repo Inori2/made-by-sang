@@ -267,7 +267,7 @@ export default function Preloader() {
 
   return (
     <div className={styles.preloader} ref={container}>
-      <GridPattern amount={4} position="absolute" />
+      <GridPattern amount={4} />
       <div className={styles.topContainer}>
           <div className={styles.listContainer} ref={listContainerRef}>
             <span className="sitemap-heading">SITEMAP:</span>

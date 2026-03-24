@@ -1,5 +1,32 @@
 .about {
+  --about-heading-size: calc(var(--text-heading-h5-size) * 1.15);
+  --about-copy-size: var(--text-paragraph-body-size);
   padding: 6rem 1.25rem;
   min-height: 100vh;
-  width: 100%;
+  position: relative;
+  font-size: var(--about-copy-size);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.contentContainer {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  gap: 4rem;
+  max-width: 960px;
+}
+
+.contentContainer span {
+  text-transform: uppercase;
+  color: var(--primary-400);
+  padding-top: 1.25em;
+}
+
+.contentContainer p {
+  font-size: var(--about-heading-size);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--text-heading-h5-letter-spacing);
 }
