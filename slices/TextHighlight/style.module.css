@@ -35,6 +35,10 @@
   line-height: 1.3;
 }
 
+.description {
+  color: var(--primary-700);
+}
+
 .svgContainer {
   position: absolute;
   z-index: -1;

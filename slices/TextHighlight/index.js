@@ -5,22 +5,149 @@
  */
 
 'use client';
+import { useRef } from 'react';
 import { PrismicRichText } from '@prismicio/react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { SplitText } from 'gsap/SplitText';
+import { useGSAP } from '@gsap/react';
 import styles from './style.module.css';
 import GridPattern from '@/app/components/global/GridPattern/GridPattern';
-import Btn from '@/app/components/ui/Btn/Btn';
+
+gsap.registerPlugin(ScrollTrigger, SplitText, useGSAP);
 
 const TextHighlight = ({ slice }) => {
+  const sectionRef = useRef(null);
+  const descriptionRef = useRef(null);
+
+  useGSAP(
+    () => {
+      const sectionElement = sectionRef.current;
+      const descriptionElement = descriptionRef.current;
+
+      if (!sectionElement || !descriptionElement) return;
+
+      const splitInstances = [];
+      let cancelled = false;
+      let rafId = 0;
+
+      const buildScrollAnimation = () => {
+        const textBlocks = descriptionElement.querySelectorAll(
+          'p, li, h1, h2, h3, h4, h5, h6, pre',
+        );
+        if (!textBlocks || !textBlocks.length) return;
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          gsap.set(textBlocks, {
+            color: 'var(--primary-50)',
+          });
+          return;
+        }
+
+        const lineCharacters = [];
+
+        textBlocks.forEach((textBlock) => {
+          const split = new SplitText(textBlock, {
+            type: 'lines,words,chars',
+            linesClass: 'text-highlight-line',
+            wordsClass: 'text-highlight-word',
+            charsClass: 'text-highlight-char',
+          });
+
+          split.lines.forEach((line) => {
+            const chars = Array.from(
+              line.querySelectorAll('.text-highlight-char'),
+            );
+
+            if (chars.length > 0) {
+              lineCharacters.push(chars);
+            }
+          });
+
+          splitInstances.push(split);
+        });
+
+        const allChars = lineCharacters.flat();
+
+        if (!allChars.length) return;
+
+        gsap.set(allChars, {
+          color: 'var(--primary-700)',
+          willChange: 'color',
+        });
+
+        const timeline = gsap.timeline({
+          defaults: {
+            ease: 'none',
+          },
+          scrollTrigger: {
+            scroller: '[data-scroll-container]',
+            trigger: sectionElement,
+            start: 'top 80%',
+            end: 'bottom 20%',
+            marker: true,
+            scrub: 1,
+            invalidateOnRefresh: true,
+          },
+        });
+
+        lineCharacters.forEach((chars) => {
+          timeline.to(
+            chars,
+            {
+              color: 'var(--primary-50)',
+              duration: Math.max(0.2, chars.length * 0.03),
+              stagger: {
+                each: 0.02,
+                from: 'start',
+              },
+            },
+            '>',
+          );
+        });
+
+        ScrollTrigger.refresh();
+      };
+
+      const queueBuild = () => {
+        rafId = window.requestAnimationFrame(() => {
+          rafId = window.requestAnimationFrame(() => {
+            if (!cancelled) {
+              buildScrollAnimation();
+            }
+          });
+        });
+      };
+
+      if (document.fonts?.ready) {
+        document.fonts.ready.then(() => {
+          if (!cancelled) {
+            queueBuild();
+          }
+        });
+      } else {
+        queueBuild();
+      }
+
+      return () => {
+        cancelled = true;
+        window.cancelAnimationFrame(rafId);
+        splitInstances.forEach((split) => split.revert());
+      };
+    },
+    { scope: sectionRef },
+  );
+
   return (
     <>
       <section
         data-slice-type={slice.slice_type}
         data-slice-variation={slice.variation}
         className={styles.about}
+        ref={sectionRef}
       >
         <div className={styles.contentContainer}>
           <span className="text-highlight">{slice.primary.heading}</span>
-          <div className={styles.description}>
+          <div className={styles.description} ref={descriptionRef}>
             <PrismicRichText field={slice.primary.description} />
           </div>
         </div>
