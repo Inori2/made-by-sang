@@ -67,6 +67,34 @@
   --size-container-max: 1920px;
   --size-container: clamp(var(--size-container-min), 100vw, var(--size-container-max));
   --size-font: calc(var(--size-container) / (var(--size-container-ideal) / var(--size-unit)));
+
+  --font-family-sans: "Saans", sans-serif;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+
+  --text-heading-family: var(--font-family-sans);
+  --text-paragraph-family: var(--font-family-sans);
+
+  --text-heading-h1-size: 10rem;
+  --text-heading-h1-letter-spacing: -0.03em;
+  --text-heading-h2-size: 6.625rem;
+  --text-heading-h2-letter-spacing: -0.03em;
+  --text-heading-h3-size: 4.5rem;
+  --text-heading-h3-letter-spacing: -0.02em;
+  --text-heading-h4-size: 3rem;
+  --text-heading-h4-letter-spacing: -0.02em;
+  --text-heading-h5-size: 2rem;
+  --text-heading-h5-letter-spacing: -0.02em;
+  --text-heading-h6-size: 1.25rem;
+  --text-heading-h6-letter-spacing: -0.01em;
+
+  --text-paragraph-body-size: 0.875rem;
+  --text-paragraph-body-letter-spacing: 0em;
+  --text-paragraph-label-size: 0.625rem;
+  --text-paragraph-label-letter-spacing: 0em;
+  --text-paragraph-label-small-size: 0.5rem;
+  --text-paragraph-label-small-letter-spacing: 0em;
 }
 
 /* Tablet */
@@ -75,6 +103,17 @@
     --size-container-ideal: 834; /* screen-size in design - no px */
     --size-container-min: 768px;
     --size-container-max: 991px;
+
+    --text-heading-h1-size: 7rem;
+    --text-heading-h2-size: 5rem;
+    --text-heading-h3-size: 3.5rem;
+    --text-heading-h4-size: 2.5rem;
+    --text-heading-h5-size: 1.75rem;
+    --text-heading-h6-size: 1.125rem;
+
+    --text-paragraph-body-size: 0.875rem;
+    --text-paragraph-label-size: 0.625rem;
+    --text-paragraph-label-small-size: 0.5rem;
   }
 }
 
@@ -84,6 +123,17 @@
     --size-container-ideal: 550; /* screen-size in design - no px */
     --size-container-min: 480px;
     --size-container-max: 767px;
+
+    --text-heading-h1-size: 4rem;
+    --text-heading-h2-size: 3rem;
+    --text-heading-h3-size: 2.25rem;
+    --text-heading-h4-size: 1.75rem;
+    --text-heading-h5-size: 1.5rem;
+    --text-heading-h6-size: 1rem;
+
+    --text-paragraph-body-size: 0.8125rem;
+    --text-paragraph-label-size: 0.625rem;
+    --text-paragraph-label-small-size: 0.5rem;
   }
 }
 
@@ -107,7 +157,7 @@
   }
 
   html {
-    font-family: "Saans", sans-serif;
+    font-family: var(--font-family-sans);
   }
 
   a {

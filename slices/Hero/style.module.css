@@ -140,7 +140,7 @@
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: clamp(1rem, 1.5vw, 1.5rem);
-  align-items: end;
+  align-items: center;
 }
 
 .bottom h1 {
@@ -173,10 +173,43 @@
 
 .scroll {
   grid-column: 1;
-  display: block;
+  display: inline-flex;
+  align-items: center;
   justify-self: start;
   color: var(--primary-500);
   will-change: transform, opacity;
+}
+
+.scrollLabel {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  white-space: pre;
+  z-index: 1;
+}
+
+.scrollCharacter {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+}
+
+.scrollCharacterActive {
+  color: var(--primary-950);
+}
+
+.scrollSweep {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 0;
+  background: var(--accent-300);
+  border-radius: 0.15em;
+  will-change: transform, width, height;
+  pointer-events: none;
 }
 
 .time {
@@ -255,9 +288,15 @@
   }
 
   .top,
-  .bottom,
-  .footer {
+  .bottom {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .footer {
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+    justify-content: space-between;
   }
 
   .top .copy,

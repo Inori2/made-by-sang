@@ -21,12 +21,16 @@ const melbourneTimeFormatter = new Intl.DateTimeFormat("en-AU", {
   timeZone: "Australia/Melbourne",
 });
 
+const scrollUtilityLabel = "[SCROLL FOR MORE]";
+
 const Hero = ({ slice }) => {
   const [melbourneTime, setMelbourneTime] = useState("--:--");
   const heroRef = useRef(null);
   const headingRefs = useRef([]);
   const copyRefs = useRef([]);
   const utilityRefs = useRef([]);
+  const scrollSweepRef = useRef(null);
+  const scrollCharacterRefs = useRef([]);
   const videoContainerRef = useRef(null);
   const videoFrameRef = useRef(null);
   const mediaRevealRef = useRef(null);
@@ -51,11 +55,14 @@ const Hero = ({ slice }) => {
       const headingElements = headingRefs.current.filter(Boolean);
       const copyElements = copyRefs.current.filter(Boolean);
       const utilityElements = utilityRefs.current.filter(Boolean);
+      const scrollSweepElement = scrollSweepRef.current;
+      const scrollCharacterElements = scrollCharacterRefs.current.filter(Boolean);
       const videoContainerElement = videoContainerRef.current;
       const videoFrameElement = videoFrameRef.current;
       const mediaRevealElement = mediaRevealRef.current;
       const splitInstances = [];
       let tl;
+      let scrollLoop;
       let cancelled = false;
       let rafId = 0;
       let removeMouseTracking = null;
@@ -139,10 +146,87 @@ const Hero = ({ slice }) => {
 
         gsap.set(paragraphLines, { yPercent: 100, autoAlpha: 0 });
 
+        if (scrollSweepElement && scrollCharacterElements.length > 0) {
+          const stepDuration = 1 / scrollCharacterElements.length;
+          const firstCharacter = scrollCharacterElements[0];
+          const scrollLabelWidth =
+            scrollSweepElement.parentElement?.offsetWidth ??
+            firstCharacter.offsetWidth;
+
+          const activateCharacter = (activeCharacter) => {
+            scrollCharacterElements.forEach((character) => {
+              character.classList.toggle(
+                style.scrollCharacterActive,
+                character === activeCharacter
+              );
+            });
+          };
+
+          const setSweepToCharacter = (character) => {
+            gsap.set(scrollSweepElement, {
+              x: character.offsetLeft,
+              y: character.offsetTop,
+              width: character.offsetWidth,
+              height: character.offsetHeight,
+              autoAlpha: 1,
+            });
+          };
+
+          const hideSweep = () => {
+            gsap.set(scrollSweepElement, {
+              x: scrollLabelWidth + firstCharacter.offsetWidth,
+              y: firstCharacter.offsetTop,
+              width: firstCharacter.offsetWidth,
+              height: firstCharacter.offsetHeight,
+              autoAlpha: 0,
+            });
+            activateCharacter(null);
+          };
+
+          hideSweep();
+
+          scrollLoop = gsap.timeline({
+            paused: true,
+            repeat: -1,
+            repeatDelay: 1.5,
+          });
+
+          scrollLoop.add(() => {
+            setSweepToCharacter(firstCharacter);
+            activateCharacter(firstCharacter);
+          });
+
+          scrollCharacterElements.slice(1).forEach((character) => {
+            scrollLoop.to(scrollSweepElement, {
+              x: character.offsetLeft,
+              y: character.offsetTop,
+              width: "10px",
+              height: character.offsetHeight,
+              duration: stepDuration,
+              ease: "none",
+              onStart: () => {
+                activateCharacter(character);
+              },
+            });
+          });
+
+          scrollLoop
+            .to(
+              {},
+              {
+                duration: stepDuration,
+              }
+            )
+            .add(() => {
+              hideSweep();
+            });
+        }
+
         tl ??= gsap.timeline({
           defaults: {
             ease: "power3.out",
           },
+          delay: 0.1,
         });
 
         tl.to(
@@ -179,10 +263,13 @@ const Hero = ({ slice }) => {
               autoAlpha: 1,
               y: 0,
               duration: 0.55,
-              stagger: 0.08,
+              stagger: 0.1,
             },
-            "-=0.1"
-          );
+            "+=0.1"
+          )
+          .add(() => {
+            scrollLoop?.restart();
+          }, ">");
       };
 
       const setupMouseTracking = () => {
@@ -266,6 +353,7 @@ const Hero = ({ slice }) => {
         window.clearTimeout(skewResetTimer);
         removeMouseTracking?.();
         tl?.kill();
+        scrollLoop?.kill();
         splitInstances.forEach((split) => split.revert());
       };
     },
@@ -362,7 +450,24 @@ const Hero = ({ slice }) => {
                 utilityRefs.current[0] = el;
               }}
             >
-              [SCROLL FOR MORE]
+              <span className={style.scrollLabel}>
+                <span
+                  className={style.scrollSweep}
+                  ref={scrollSweepRef}
+                  aria-hidden="true"
+                />
+                {scrollUtilityLabel.split("").map((character, index) => (
+                  <span
+                    key={`${character}-${index}`}
+                    className={style.scrollCharacter}
+                    ref={(el) => {
+                      scrollCharacterRefs.current[index] = el;
+                    }}
+                  >
+                    {character === " " ? "\u00A0" : character}
+                  </span>
+                ))}
+              </span>
             </div>
 
             <div
