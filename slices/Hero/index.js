@@ -274,7 +274,7 @@ const Hero = ({ slice }) => {
 
       const setupMouseTracking = () => {
         if (!heroElement || !videoContainerElement || !videoFrameElement) return;
-        if (!window.matchMedia("(min-width: 992px)").matches) return;
+        if (!window.matchMedia("(min-width: 1025px)").matches) return;
 
         const xTo = gsap.quickTo(videoFrameElement, "x", {
           duration: 0.6,

@@ -158,6 +158,7 @@
 
   html {
     font-family: var(--font-family-sans);
+    font-size: var(--size-font);
   }
 
   a {
@@ -174,7 +175,6 @@ body {
     background-color: var(--primary-950);
     color: var(--primary-50);
     box-sizing: border-box;
-    font-size: var(--size-font);
   }
 
   body ::selection {
