@@ -16,7 +16,7 @@ export default function GridPattern({
       aria-hidden="true"
       className={`pointer-events-none absolute inset-0 grid h-full w-full grid-cols-4 px-5 ${className ?? ''}`}
       style={{
-        zIndex: -1,
+        zIndex: -2,
         '--grid-pattern-border-color': resolvedBorderColor,
       }}
     >
