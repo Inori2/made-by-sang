@@ -1,0 +1,27 @@
+[
+	{
+		"__TYPE__": "SharedSliceContent",
+		"variation": "default",
+		"primary": {
+			"description": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "For years, my world was color, type, and form. Then I started looking at the web differently not just as a viewer, but as someone who wanted to build it. UI/UX, web design, code each one a new language I had no roadmap for. So I made my own. This site is that map, still being drawn.",
+							"spans": []
+						},
+						"direction": "ltr"
+					}
+				]
+			},
+			"heading": {
+				"__TYPE__": "FieldContent",
+				"type": "Text",
+				"value": "About"
+			}
+		},
+		"items": []
+	}
+]

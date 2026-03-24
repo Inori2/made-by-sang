@@ -1,10 +1,9 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { SliceZone } from "@prismicio/react";
+import { useState } from 'react';
+import { SliceZone } from '@prismicio/react';
 
-import { components } from "@/slices";
-import Preloader from "../Preloader/Preloader";
+import { components } from '@/slices';
 
 export default function HomeClients({ slices }) {
   const [isLoading, setIsLoading] = useState(true);
