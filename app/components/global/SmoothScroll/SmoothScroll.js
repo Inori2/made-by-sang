@@ -13,43 +13,27 @@ export default function SmoothScroll({ children }) {
   const locoRef = useRef(null);
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    const el = containerRef.current;
+    if (!el) return;
 
-    locoRef.current = new LocomotiveScroll({
-      el: containerRef.current,
+    // ✅ init locomotive v5
+    const loco = new LocomotiveScroll({
+      el,
       smooth: true,
       lerp: 0.08,
     });
 
-    // ✅ Sync Locomotive with ScrollTrigger
-    window.addEventListener('scroll', ScrollTrigger.update);
+    locoRef.current = loco;
 
-    ScrollTrigger.scrollerProxy(containerRef.current, {
-      scrollTop(value) {
-        return arguments.length
-          ? locoRef.current.scrollTo(value, { duration: 0, disableLerp: true })
-          : (locoRef.current.scroll?.instance?.scroll?.y ?? window.scrollY);
-      },
-      getBoundingClientRect() {
-        return {
-          top: 0,
-          left: 0,
-          width: window.innerWidth,
-          height: window.innerHeight,
-        };
-      },
-      pinType: containerRef.current.style.transform ? 'transform' : 'fixed',
-    });
-
+    // ✅ just refresh ScrollTrigger once
     ScrollTrigger.refresh();
 
     return () => {
-      window.removeEventListener('scroll', ScrollTrigger.update);
-      ScrollTrigger.removeEventListener('refresh', () =>
-        locoRef.current?.update(),
-      );
-      ScrollTrigger.killAll();
-      locoRef.current?.destroy();
+      // cleanup GSAP
+      ScrollTrigger.getAll().forEach((t) => t.kill());
+
+      // cleanup locomotive
+      loco.destroy();
       locoRef.current = null;
     };
   }, []);

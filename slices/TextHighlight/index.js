@@ -3,8 +3,8 @@
  * @typedef {import("@prismicio/react").SliceComponentProps<TextHighlightSlice>} TextHighlightProps
  * @type {import("react").FC<TextHighlightProps>}
  */
-
 'use client';
+
 import { useRef } from 'react';
 import { PrismicRichText } from '@prismicio/react';
 import gsap from 'gsap';
@@ -28,109 +28,111 @@ const TextHighlight = ({ slice }) => {
       if (!sectionElement || !descriptionElement) return;
 
       const splitInstances = [];
-      let cancelled = false;
-      let rafId = 0;
+      let timeline = null;
 
-      const buildScrollAnimation = () => {
+      const buildAnimation = () => {
         const textBlocks = descriptionElement.querySelectorAll(
-          'p, li, h1, h2, h3, h4, h5, h6, pre',
+          'p, li, h1, h2, h3, h4, h5, h6',
         );
-        if (!textBlocks || !textBlocks.length) return;
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-          gsap.set(textBlocks, {
-            color: 'var(--primary-50)',
-          });
+
+        if (!textBlocks.length) {
+          console.warn('No text blocks found');
           return;
         }
 
-        const lineCharacters = [];
+        console.log('Found text blocks:', textBlocks.length);
+
+        // Reset inline styles
+        textBlocks.forEach((block) => {
+          block.style.removeProperty('color');
+        });
+
+        // Accessibility: reduce motion
+        /*         if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          gsap.set(textBlocks, { opacity: 1, color: 'var(--primary-50)' });
+          return;
+        } */
+
+        const linesData = [];
 
         textBlocks.forEach((textBlock) => {
-          const split = new SplitText(textBlock, {
+          const split = SplitText.create(textBlock, {
             type: 'lines,words,chars',
             linesClass: 'text-highlight-line',
             wordsClass: 'text-highlight-word',
             charsClass: 'text-highlight-char',
           });
 
-          split.lines.forEach((line) => {
-            const chars = Array.from(
-              line.querySelectorAll('.text-highlight-char'),
-            );
+          splitInstances.push(split);
 
-            if (chars.length > 0) {
-              lineCharacters.push(chars);
+          split.lines.forEach((line) => {
+            const chars = line.querySelectorAll('.text-highlight-char');
+            if (chars.length) {
+              linesData.push(chars);
             }
           });
-
-          splitInstances.push(split);
         });
 
-        const allChars = lineCharacters.flat();
+        if (!linesData.length) {
+          console.warn('No lines data collected');
+          return;
+        }
 
-        if (!allChars.length) return;
+        timeline?.kill();
 
-        gsap.set(allChars, {
-          color: 'var(--primary-700)',
-          willChange: 'color',
+        // Initial state
+        gsap.set(linesData.flat(), {
+          opacity: 0.7,
+          willChange: 'transform, opacity, color',
         });
 
-        const timeline = gsap.timeline({
-          defaults: {
-            ease: 'none',
-          },
+        timeline = gsap.timeline({
+          defaults: { ease: 'power2.out' },
           scrollTrigger: {
-            scroller: '[data-scroll-container]',
             trigger: sectionElement,
-            start: 'top 80%',
-            end: 'bottom 20%',
-            marker: true,
-            scrub: 1,
+            start: '-=200 50%',
+            end: 'bottom 80%',
+            scrub: 2.5,
             invalidateOnRefresh: true,
           },
         });
 
-        lineCharacters.forEach((chars) => {
-          timeline.to(
-            chars,
-            {
-              color: 'var(--primary-50)',
-              duration: Math.max(0.2, chars.length * 0.03),
-              stagger: {
-                each: 0.02,
-                from: 'start',
-              },
-            },
-            '>',
-          );
+        // Animate per line: each line completes before next starts
+        linesData.forEach((chars) => {
+          timeline.to(chars, {
+            opacity: 1,
+            color: 'var(--primary-50)',
+            duration: 1.5,
+            stagger: 0.5,
+          });
         });
 
         ScrollTrigger.refresh();
       };
 
-      const queueBuild = () => {
-        rafId = window.requestAnimationFrame(() => {
-          rafId = window.requestAnimationFrame(() => {
-            if (!cancelled) {
-              buildScrollAnimation();
-            }
-          });
-        });
+      // Wait for DOM content to be rendered before splitting
+      const waitForContent = () => {
+        const firstTextBlock = descriptionElement.querySelector(
+          'p, li, h1, h2, h3, h4, h5, h6',
+        );
+
+        if (firstTextBlock) {
+          // Content is ready, wait for fonts
+          if (document.fonts?.ready) {
+            document.fonts.ready.then(buildAnimation);
+          } else {
+            buildAnimation();
+          }
+        } else {
+          // Content not ready yet, try again
+          requestAnimationFrame(waitForContent);
+        }
       };
 
-      if (document.fonts?.ready) {
-        document.fonts.ready.then(() => {
-          if (!cancelled) {
-            queueBuild();
-          }
-        });
-      } else {
-        queueBuild();
-      }
+      waitForContent();
 
       return () => {
-        cancelled = true;
-        window.cancelAnimationFrame(rafId);
+        timeline?.kill();
         splitInstances.forEach((split) => split.revert());
       };
     },
@@ -140,17 +142,19 @@ const TextHighlight = ({ slice }) => {
   return (
     <>
       <section
+        ref={sectionRef}
+        className={styles.about}
         data-slice-type={slice.slice_type}
         data-slice-variation={slice.variation}
-        className={styles.about}
-        ref={sectionRef}
       >
         <div className={styles.contentContainer}>
           <span className="text-highlight">{slice.primary.heading}</span>
-          <div className={styles.description} ref={descriptionRef}>
+
+          <div ref={descriptionRef} className={styles.description}>
             <PrismicRichText field={slice.primary.description} />
           </div>
         </div>
+
         <div className={styles.svgContainer}>
           <svg
             width="620"
@@ -212,8 +216,11 @@ const TextHighlight = ({ slice }) => {
             />
           </svg>
         </div>
+
         <GridPattern />
       </section>
+
+      <section className={styles.about}></section>
     </>
   );
 };
