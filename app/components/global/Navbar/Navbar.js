@@ -2,7 +2,7 @@
 import { useRef, useState, useEffect } from 'react';
 import Logo from '../../ui/Logo/Logo';
 import Btn from '../../ui/Btn/Btn';
-import MenuButton from '../../ui/Btn/MenuButton';
+import MenuButton from '../../ui/MenuBtn/MenuButton';
 import MenuWrapper from '../../ui/MenuWrapper/MenuWrapper';
 import gsap from 'gsap';
 import style from './style.module.css';

@@ -1,0 +1,60 @@
+.button {
+  padding: clamp(0.875rem, 1.5vw, 1rem) clamp(1rem, 1.75vw, 1.25rem);
+  background-color: var(--accent-300);
+  color: var(--primary-950);
+  cursor: pointer;
+  font-style: uppercase;
+  font-size: clamp(0.875rem, 1.5vw, 1rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  text-align: center;
+  justify-self: end;
+  border-radius: 2px;
+}
+
+.buttonContainer {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: clamp(0.875rem, 1.5vw, 1rem);
+}
+
+.menuButton {
+  display: flex;
+  position: relative;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  padding: clamp(0.875rem, 1.5vw, 1rem) clamp(1rem, 1.75vw, 1.25rem);
+  font-size: clamp(0.875rem, 1.5vw, 1rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  text-align: center;
+  width: fit-content;
+}
+.menuButton:hover {
+  background-color: var(--primary-900);
+  transition: 0.5s ease;
+}
+
+.lineContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.line {
+  width: 24px;
+  height: 1px;
+  background-color: var(--primary-50);
+}
+
+/*Mobile*/
+@media screen and (max-width: 768px) {
+  .button {
+    display: none;
+  }
+}

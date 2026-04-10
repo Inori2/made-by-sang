@@ -84,7 +84,7 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  font-size: clamp(4rem, 4vw, 5rem);
+  font-size: var(--text-heading-h3-size);
   font-weight: 500;
   height: 1em;
   line-height: 1;
@@ -114,7 +114,7 @@
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    font-size: clamp(2rem, 18vw, 4rem);
+    font-size: var(--text-heading-h3-size); /* from :root tablet */
     font-weight: 500;
     height: 1em;
     line-height: 1;
@@ -144,7 +144,7 @@
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    font-size: clamp(3rem, 18vw, 6rem);
+    font-size: var(--text-heading-h3-size); /* from :root mobile */
     font-weight: 500;
     height: 1em;
     line-height: 1;

@@ -25,7 +25,8 @@
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "remixicon": "^4.9.1",
-    "three": "^0.182.0"
+    "three": "^0.182.0",
+    "unicornstudio-react": "^2.1.4-1"
   },
   "devDependencies": {
     "@slicemachine/adapter-next": "^0.3.95",

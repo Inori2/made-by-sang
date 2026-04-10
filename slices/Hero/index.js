@@ -3,28 +3,28 @@
  * @typedef {import("@prismicio/react").SliceComponentProps<HeroSlice>} HeroProps
  * @type {import("react").FC<HeroProps>}
  */
-"use client";
-import GridPattern from "@/app/components/global/GridPattern/GridPattern";
-import { PrismicRichText } from "@prismicio/react";
-import { useEffect, useRef, useState } from "react";
-import gsap from "gsap";
-import { SplitText } from "gsap/SplitText";
-import { useGSAP } from "@gsap/react";
-import style from "./style.module.css";
+'use client';
+import GridPattern from '@/app/components/global/GridPattern/GridPattern';
+import { PrismicRichText } from '@prismicio/react';
+import { useEffect, useRef, useState } from 'react';
+import gsap from 'gsap';
+import { SplitText } from 'gsap/SplitText';
+import { useGSAP } from '@gsap/react';
+import style from './style.module.css';
 
 gsap.registerPlugin(SplitText, useGSAP);
 
-const melbourneTimeFormatter = new Intl.DateTimeFormat("en-AU", {
-  hour: "2-digit",
-  minute: "2-digit",
+const melbourneTimeFormatter = new Intl.DateTimeFormat('en-AU', {
+  hour: '2-digit',
+  minute: '2-digit',
   hour12: false,
-  timeZone: "Australia/Melbourne",
+  timeZone: 'Australia/Melbourne',
 });
 
-const scrollUtilityLabel = "[SCROLL FOR MORE]";
+const scrollUtilityLabel = '[SCROLL FOR MORE]';
 
 const Hero = ({ slice }) => {
-  const [melbourneTime, setMelbourneTime] = useState("--:--");
+  const [melbourneTime, setMelbourneTime] = useState('--:--');
   const heroRef = useRef(null);
   const headingRefs = useRef([]);
   const copyRefs = useRef([]);
@@ -56,7 +56,8 @@ const Hero = ({ slice }) => {
       const copyElements = copyRefs.current.filter(Boolean);
       const utilityElements = utilityRefs.current.filter(Boolean);
       const scrollSweepElement = scrollSweepRef.current;
-      const scrollCharacterElements = scrollCharacterRefs.current.filter(Boolean);
+      const scrollCharacterElements =
+        scrollCharacterRefs.current.filter(Boolean);
       const videoContainerElement = videoContainerRef.current;
       const videoFrameElement = videoFrameRef.current;
       const mediaRevealElement = mediaRevealRef.current;
@@ -89,18 +90,18 @@ const Hero = ({ slice }) => {
           const finalVideoHeight = height;
           const initialSquareSize = Math.max(
             18,
-            Math.min(finalVideoWidth, finalVideoHeight) * 0.16
+            Math.min(finalVideoWidth, finalVideoHeight) * 0.16,
           );
 
           gsap.set(videoFrameElement, {
             width: initialSquareSize,
             height: initialSquareSize,
-            transformOrigin: "50% 50%",
+            transformOrigin: '50% 50%',
           });
 
           tl = gsap.timeline({
             defaults: {
-              ease: "power3.out",
+              ease: 'power3.out',
             },
           });
 
@@ -110,21 +111,21 @@ const Hero = ({ slice }) => {
               width: finalVideoWidth,
               height: finalVideoHeight,
               duration: 1.05,
-              ease: "power2.inOut",
+              ease: 'power2.inOut',
               onComplete: () => {
                 gsap.set(videoFrameElement, {
-                  clearProps: "width,height,transformOrigin",
+                  clearProps: 'width,height,transformOrigin',
                 });
               },
             },
-            0
+            0,
           );
         }
 
         copyElements.forEach((copy) => {
-          copy.querySelectorAll("p").forEach((paragraph) => {
+          copy.querySelectorAll('p').forEach((paragraph) => {
             const split = new SplitText(paragraph, {
-              type: "lines",
+              type: 'lines',
               linesClass: style.copyLine,
             });
 
@@ -132,7 +133,7 @@ const Hero = ({ slice }) => {
               line.classList.add(style.copyLine);
 
               if (!line.parentElement?.classList.contains(style.lineMask)) {
-                const mask = document.createElement("div");
+                const mask = document.createElement('div');
                 mask.className = style.lineMask;
                 line.parentNode.insertBefore(mask, line);
                 mask.appendChild(line);
@@ -157,7 +158,7 @@ const Hero = ({ slice }) => {
             scrollCharacterElements.forEach((character) => {
               character.classList.toggle(
                 style.scrollCharacterActive,
-                character === activeCharacter
+                character === activeCharacter,
               );
             });
           };
@@ -200,10 +201,10 @@ const Hero = ({ slice }) => {
             scrollLoop.to(scrollSweepElement, {
               x: character.offsetLeft,
               y: character.offsetTop,
-              width: "10px",
+              width: character.offsetWidth,
               height: character.offsetHeight,
               duration: stepDuration,
-              ease: "none",
+              ease: 'none',
               onStart: () => {
                 activateCharacter(character);
               },
@@ -215,7 +216,7 @@ const Hero = ({ slice }) => {
               {},
               {
                 duration: stepDuration,
-              }
+              },
             )
             .add(() => {
               hideSweep();
@@ -224,7 +225,7 @@ const Hero = ({ slice }) => {
 
         tl ??= gsap.timeline({
           defaults: {
-            ease: "power3.out",
+            ease: 'power3.out',
           },
           delay: 0.1,
         });
@@ -236,7 +237,7 @@ const Hero = ({ slice }) => {
             duration: 1.1,
             stagger: 0.14,
           },
-          0
+          0,
         )
           .to(
             copyElements,
@@ -245,7 +246,7 @@ const Hero = ({ slice }) => {
               duration: 0.01,
               stagger: 0.1,
             },
-            0
+            0,
           )
           .to(
             paragraphLines,
@@ -255,7 +256,7 @@ const Hero = ({ slice }) => {
               duration: 0.9,
               stagger: 0.1,
             },
-            0
+            0,
           )
           .to(
             utilityElements,
@@ -265,24 +266,25 @@ const Hero = ({ slice }) => {
               duration: 0.55,
               stagger: 0.1,
             },
-            "+=0.1"
+            '+=0.1',
           )
           .add(() => {
             scrollLoop?.restart();
-          }, ">");
+          }, '>');
       };
 
       const setupMouseTracking = () => {
-        if (!heroElement || !videoContainerElement || !videoFrameElement) return;
-        if (!window.matchMedia("(min-width: 1025px)").matches) return;
+        if (!heroElement || !videoContainerElement || !videoFrameElement)
+          return;
+        if (!window.matchMedia('(min-width: 1025px)').matches) return;
 
-        const xTo = gsap.quickTo(videoFrameElement, "x", {
+        const xTo = gsap.quickTo(videoFrameElement, 'x', {
           duration: 0.6,
-          ease: "power3.out",
+          ease: 'power3.out',
         });
-        const skewTo = gsap.quickTo(videoFrameElement, "skewX", {
+        const skewTo = gsap.quickTo(videoFrameElement, 'skewX', {
           duration: 0.35,
-          ease: "power2.out",
+          ease: 'power2.out',
         });
         let lastOffset = 0;
 
@@ -294,7 +296,7 @@ const Hero = ({ slice }) => {
           const clamped = Math.max(0, Math.min(1, progress));
           const maxOffset = Math.max(
             0,
-            (containerBounds.width - frameBounds.width) / 2
+            (containerBounds.width - frameBounds.width) / 2,
           );
           const offset = (clamped - 0.5) * maxOffset * 2;
           const delta = offset - lastOffset;
@@ -317,12 +319,12 @@ const Hero = ({ slice }) => {
           window.clearTimeout(skewResetTimer);
         };
 
-        heroElement.addEventListener("mousemove", handleMouseMove);
-        heroElement.addEventListener("mouseleave", handleMouseLeave);
+        heroElement.addEventListener('mousemove', handleMouseMove);
+        heroElement.addEventListener('mouseleave', handleMouseLeave);
 
         removeMouseTracking = () => {
-          heroElement.removeEventListener("mousemove", handleMouseMove);
-          heroElement.removeEventListener("mouseleave", handleMouseLeave);
+          heroElement.removeEventListener('mousemove', handleMouseMove);
+          heroElement.removeEventListener('mouseleave', handleMouseLeave);
           window.clearTimeout(skewResetTimer);
           xTo(0);
           skewTo(0);
@@ -357,7 +359,7 @@ const Hero = ({ slice }) => {
         splitInstances.forEach((split) => split.revert());
       };
     },
-    { scope: heroRef }
+    { scope: heroRef },
   );
 
   return (
@@ -392,18 +394,9 @@ const Hero = ({ slice }) => {
             </div>
           </div>
 
-          <div
-            className={style.videoContainer}
-            ref={videoContainerRef}
-          >
-            <div
-              className={style.video}
-              ref={videoFrameRef}
-            >
-              <div
-                className={style.videoReveal}
-                ref={mediaRevealRef}
-              >
+          <div className={style.videoContainer} ref={videoContainerRef}>
+            <div className={style.video} ref={videoFrameRef}>
+              <div className={style.videoReveal} ref={mediaRevealRef}>
                 {mediaUrl ? (
                   <video
                     src={mediaUrl}
@@ -456,7 +449,7 @@ const Hero = ({ slice }) => {
                   ref={scrollSweepRef}
                   aria-hidden="true"
                 />
-                {scrollUtilityLabel.split("").map((character, index) => (
+                {scrollUtilityLabel.split('').map((character, index) => (
                   <span
                     key={`${character}-${index}`}
                     className={style.scrollCharacter}
@@ -464,7 +457,7 @@ const Hero = ({ slice }) => {
                       scrollCharacterRefs.current[index] = el;
                     }}
                   >
-                    {character === " " ? "\u00A0" : character}
+                    {character === ' ' ? '\u00A0' : character}
                   </span>
                 ))}
               </span>

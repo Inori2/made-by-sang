@@ -1,18 +1,24 @@
-"use client"
-import style from "./style.module.css"
-import dynamic from "next/dynamic";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useRef, useEffect, useState } from "react";
-import gsap from "gsap";
-import SocialBtn from "../SocialBtn/SocialBtn";
-import { RiBehanceFill, RiInstagramFill, RiLinkedinFill } from "@remixicon/react"
-import Status from "../Status/Status";
+'use client';
+import style from './style.module.css';
+import dynamic from 'next/dynamic';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useRef, useEffect, useState } from 'react';
+import gsap from 'gsap';
+import SocialBtn from '../SocialBtn/SocialBtn';
+import {
+  RiBehanceFill,
+  RiInstagramFill,
+  RiLinkedinFill,
+} from '@remixicon/react';
+import Status from '../Status/Status';
 
-const Spline = dynamic(() => import("@splinetool/react-spline"), { ssr: false });
+const Spline = dynamic(() => import('@splinetool/react-spline'), {
+  ssr: false,
+});
 
-const scene = "/scene/badge.splinecode";
-const ITEMS = ["Index", "Works", "About", "Archive"];
+const scene = '/scene/badge.splinecode';
+const ITEMS = ['Index', 'Works', 'About', 'Archive'];
 
 export default function MenuWrapper({ isOpen, onLinkClick, ref }) {
   const pathname = usePathname();
@@ -36,8 +42,8 @@ export default function MenuWrapper({ isOpen, onLinkClick, ref }) {
   useEffect(() => {
     const check = () => setIsDesktop(window.innerWidth > 768);
     check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
   }, []);
 
   // Reveal/hide animation — synced with navbar expansion sequence
@@ -45,32 +51,45 @@ export default function MenuWrapper({ isOpen, onLinkClick, ref }) {
   useEffect(() => {
     if (!wrapperRef.current) return;
 
-    gsap.set([menuLeftRef.current, menuCenterRef.current, menuRightRef.current], {
-      y: 50,
-    });
+    gsap.set(
+      [menuLeftRef.current, menuCenterRef.current, menuRightRef.current],
+      {
+        y: 50,
+      },
+    );
     gsap.set(contentRefs.current, { yPercent: 100 });
-    gsap.set(wrapperRef.current, { opacity: 0, visibility: "hidden" });
+    gsap.set(wrapperRef.current, { opacity: 0, visibility: 'hidden' });
 
-    tlReveal.current = gsap.timeline({ paused: true })
-      .set(wrapperRef.current, { visibility: "visible" })
+    tlReveal.current = gsap
+      .timeline({ paused: true })
+      .set(wrapperRef.current, { visibility: 'visible' })
       .to(wrapperRef.current, {
         opacity: 1,
         duration: 0.01,
       })
-      .to([menuLeftRef.current, menuCenterRef.current, menuRightRef.current], {
-        y: 0,
-        duration: 0.5,
-        ease: "power2.out",
-        stagger: {
-          each: 0.1,
-          from: "center",
+      .to(
+        [menuLeftRef.current, menuCenterRef.current, menuRightRef.current],
+        {
+          y: 0,
+          duration: 0.5,
+          ease: 'power2.out',
+          stagger: {
+            each: 0.1,
+            from: 'center',
+          },
         },
-      }, "<0.1").to(contentRefs.current, {
-        yPercent: 0,
-        duration: 0.5,
-        ease: "power2.out",
-        stagger: 0.05,
-      }, "<0.1");
+        '<0.1',
+      )
+      .to(
+        contentRefs.current,
+        {
+          yPercent: 0,
+          duration: 0.5,
+          ease: 'power2.out',
+          stagger: 0.05,
+        },
+        '<0.1',
+      );
   }, []);
 
   useEffect(() => {
@@ -80,58 +99,61 @@ export default function MenuWrapper({ isOpen, onLinkClick, ref }) {
 
     if (!isOpen) {
       // Opening: wait for navbar width expansion (0.5s) to complete, then play
-      delayedCallRef.current = gsap.delayedCall(0.5, () => tlReveal.current.play());
+      delayedCallRef.current = gsap.delayedCall(0.5, () =>
+        tlReveal.current.play(),
+      );
     } else {
       // Closing: reverse the menu items animation, then hide wrapper
       gsap.to(wrapperRef.current, {
         opacity: 0,
         duration: 0.2,
-        ease: "power2.in",
+        ease: 'power2.in',
         onComplete: () => {
-          wrapperRef.current.style.visibility = "hidden";
-        }
+          wrapperRef.current.style.visibility = 'hidden';
+        },
       });
       tlReveal.current.reverse();
     }
   }, [isOpen]);
 
-useEffect(() => {
-  if (isOpen) return;
+  useEffect(() => {
+    if (isOpen) return;
 
-  const cleanups = [];
+    const cleanups = [];
 
-  liRefs.current.forEach((el, i) => {
-    if (!el || !span0Refs.current[i]) return;
+    liRefs.current.forEach((el, i) => {
+      if (!el || !span0Refs.current[i]) return;
+      if (el.dataset.active === 'true') return; // active item keeps accent color and no hover tween
 
-    const tl = gsap.timeline({ paused: true });
+      const tl = gsap.timeline({ paused: true });
 
-    tl.to(span0Refs.current[i], {
-      color: "var(--accent-300)",
-      duration: 0.4,
-      ease: "power2.inOut",
+      tl.to(span0Refs.current[i], {
+        color: 'var(--accent-300)',
+        duration: 0.4,
+        ease: 'power2.inOut',
+      });
+
+      const onEnter = () => tl.play();
+      const onLeave = () => tl.reverse();
+
+      el.addEventListener('mouseenter', onEnter);
+      el.addEventListener('mouseleave', onLeave);
+
+      cleanups.push(() => {
+        el.removeEventListener('mouseenter', onEnter);
+        el.removeEventListener('mouseleave', onLeave);
+        tl.kill();
+      });
     });
 
-    const onEnter = () => tl.play();
-    const onLeave = () => tl.reverse();
-
-    el.addEventListener("mouseenter", onEnter);
-    el.addEventListener("mouseleave", onLeave);
-
-    cleanups.push(() => {
-      el.removeEventListener("mouseenter", onEnter);
-      el.removeEventListener("mouseleave", onLeave);
-      tl.kill();
-    });
-  });
-
-  return () => cleanups.forEach((fn) => fn());
-}, [isOpen]);
+    return () => cleanups.forEach((fn) => fn());
+  }, [isOpen]);
 
   return (
     <div
       className={style.menuWrapper}
       ref={(el) => {
-        wrapperRef.current = el;  // internal ref for animations
+        wrapperRef.current = el; // internal ref for animations
         if (ref) ref.current = el; // external ref for Navbar's scrollHeight
       }}
     >
@@ -140,15 +162,45 @@ useEffect(() => {
           <span className={style.menuListTitle}>Navigation</span>
           <ul>
             {ITEMS.map((item, index) => {
-              const href = item === "Index" ? "/" : `/${item.toLowerCase()}`;
-              const isActive = pathname === href;
+              const href = item === 'Index' ? '/' : `/${item.toLowerCase()}`;
+              const currentPath =
+                pathname?.endsWith('/') && pathname !== '/'
+                  ? pathname.slice(0, -1)
+                  : pathname;
+              const isActive =
+                href === '/'
+                  ? currentPath === '/'
+                  : currentPath?.startsWith(href);
+              const activeStyle = isActive
+                ? { color: 'var(--accent-300)' }
+                : {};
               return (
-                <li key={index} className={style.menuListItem} ref={(el) => (liRefs.current[index] = el)}>
+                <li
+                  key={index}
+                  className={style.menuListItem}
+                  ref={(el) => (liRefs.current[index] = el)}
+                  data-active={isActive}
+                >
                   <Link href={href} onClick={handleLinkClick}>
-                    <div className={style.menuListItemContent} ref={(el) => (contentRefs.current[index] = el)} style={isActive ? { color: "var(--accent-300)" } : {}}>
+                    <div
+                      className={style.menuListItemContent}
+                      ref={(el) => (contentRefs.current[index] = el)}
+                      style={activeStyle}
+                    >
                       <div className={style.menuItemTextSlot}>
-                        <span ref={(el) => (span0Refs.current[index] = el)}>{item}</span>
-                        <span ref={(el) => (span1Refs.current[index] = el)} aria-hidden="true">{item}</span>
+                        <span
+                          ref={(el) => (span0Refs.current[index] = el)}
+                          style={activeStyle}
+                        >
+                          {item}
+                        </span>
+                        <span
+                          ref={(el) => (span1Refs.current[index] = el)}
+                          aria-hidden="true"
+                          style={activeStyle}
+                        >
+                          {item}
+                        </span>
                       </div>
                     </div>
                   </Link>
@@ -162,7 +214,9 @@ useEffect(() => {
             <span className={style.menuListTitle}>Contact</span>
             <ul>
               <li>
-                <Link href="mailto:trannhatsang2000@gmail.com">trannhatsang2000@gmail.com</Link>
+                <Link href="mailto:trannhatsang2000@gmail.com">
+                  trannhatsang2000@gmail.com
+                </Link>
               </li>
             </ul>
           </div>

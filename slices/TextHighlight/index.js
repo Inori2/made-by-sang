@@ -10,15 +10,21 @@ import { PrismicRichText } from '@prismicio/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
+import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
 import { useGSAP } from '@gsap/react';
+import { CustomEase } from 'gsap/CustomEase';
 import styles from './style.module.css';
 import GridPattern from '@/app/components/global/GridPattern/GridPattern';
 
-gsap.registerPlugin(ScrollTrigger, SplitText, useGSAP);
+gsap.registerPlugin(ScrollTrigger, SplitText, DrawSVGPlugin, CustomEase);
+
+CustomEase.create('ease.inOutQuart', 'M0,0 C0.77,0 0.175,1 1,1');
 
 const TextHighlight = ({ slice }) => {
   const sectionRef = useRef(null);
   const descriptionRef = useRef(null);
+  const circleRef = useRef(null);
+  const pathsRef = useRef(null);
 
   useGSAP(
     () => {
@@ -86,8 +92,18 @@ const TextHighlight = ({ slice }) => {
           willChange: 'transform, opacity, color',
         });
 
+        // Set initial state for SVG last path (invisible) and circle (undrawn)
+        if (pathsRef.current) {
+          const paths = pathsRef.current.querySelectorAll('path');
+          const lastPath = paths[paths.length - 1]; // Last path before circle
+          gsap.set(lastPath, { opacity: 0 });
+        }
+        if (circleRef.current) {
+          gsap.set(circleRef.current, { drawSVG: '0% 0%' });
+        }
+
         timeline = gsap.timeline({
-          defaults: { ease: 'power2.out' },
+          defaults: { ease: 'ease.inOutQuart' },
           scrollTrigger: {
             trigger: sectionElement,
             start: '-=200 50%',
@@ -106,6 +122,38 @@ const TextHighlight = ({ slice }) => {
             stagger: 0.5,
           });
         });
+
+        // SVG last path fade-in (appear first)
+        if (pathsRef.current) {
+          const paths = pathsRef.current.querySelectorAll('path');
+          const lastPath = paths[paths.length - 1]; // Last path before circle
+          timeline.fromTo(
+            lastPath,
+            { opacity: 0 },
+            {
+              opacity: 1,
+              duration: 0.8,
+              ease: 'power2.out',
+            },
+            0, // Start immediately
+          );
+        }
+
+        // Sync circle drawSVG (after the last path appears)
+        if (circleRef.current) {
+          timeline.fromTo(
+            circleRef.current,
+            {
+              drawSVG: '0% 0%', // Start from top (0 degrees)
+            },
+            {
+              drawSVG: '0% 100%', // Draw clockwise to complete circle
+              duration: linesData.length * 20,
+              ease: 'none',
+            },
+            '>', // Start after the last path animation completes
+          );
+        }
 
         ScrollTrigger.refresh();
       };
@@ -157,6 +205,7 @@ const TextHighlight = ({ slice }) => {
 
         <div className={styles.svgContainer}>
           <svg
+            ref={pathsRef}
             width="620"
             height="620"
             viewBox="0 0 620 620"
@@ -208,19 +257,19 @@ const TextHighlight = ({ slice }) => {
               strokeWidth="0.5"
             />
             <circle
+              ref={circleRef}
               cx="310"
               cy="310"
               r="248.902"
               stroke="#0F0F0F"
               strokeWidth="10"
+              transform="rotate(-90 310 310)"
             />
           </svg>
         </div>
 
         <GridPattern />
       </section>
-
-      <section className={styles.about}></section>
     </>
   );
 };
